@@ -1,6 +1,49 @@
 {
-    "wlecome":{
-        "title": "مرحبًا بك في StayBay",
-        "subtitle": "اكتشف منازل أحلامك مع StayBay اليوم!"
+    "welcome": {
+        "WELCOME": "أهلاً بك",
+        "des1": "ابحث عن مساحتك القادمة، واشعر كأنك في منزلك",
+        "des2": "حيث الراحة تلتقي بالسهولة",
+        "login": "تسجيل الدخول",
+        "signup": "إنشاء حساب"
+    },
+
+    "login": {
+        "title": "تسجيل الدخول",
+        "subtitle": "يرجى إدخال بياناتك لتسجيل الدخول.",
+        "phone": "رقم الهاتف",
+        "password": "كلمة المرور",
+        "login": "تسجيل الدخول",
+        "forgotPassword": "هل نسيت كلمة المرور؟",
+        "haveAccount": "ليس لديك حساب؟",
+        "createAccount": "إنشاء حساب",
+        "phoneRequired": "يرجى إدخال رقم الهاتف",
+        "phoneLengthError": "يجب أن يكون رقم الهاتف 10 أرقام",
+        "passwordRequired": "يرجى إدخال كلمة المرور",
+        "passwordLengthError": "يجب أن تكون كلمة المرور بين 8 و16 حرفًا"
+    },
+
+    "singup": {
+        "title": "إنشاء حساب",
+        "firstName": "الاسم الأول",
+        "lastName": "اسم العائلة",
+        "phone": "رقم الهاتف",
+        "password": "كلمة المرور",
+        "dob": "تاريخ الميلاد",
+        "idImage": "صورة الهوية",
+        "selectImage": "اختر صورة",
+        "resetImage": "إعادة تعيين",
+        "signUp": "إنشاء حساب",
+        "haveAccount": "لديك حساب بالفعل؟",
+        "login": "تسجيل الدخول",
+        "required": "هذا الحقل مطلوب",
+        "nameLengthError": "الحد الأقصى 20 حرفًا",
+        "phoneRequired": "يرجى إدخال رقم الهاتف",
+        "phoneLengthError": "يجب أن يكون رقم الهاتف 10 أرقام",
+        "passwordRequired": "يرجى إدخال كلمة المرور",
+        "passwordLengthError": "يجب أن تكون كلمة المرور بين 8 و16 حرفًا",
+        "profileRequired": "يرجى اختيار صورة الملف الشخصي.",
+        "idRequired": "يرجى اختيار صورة الهوية.",
+        "allRequired": "يرجى تعبئة جميع الحقول المطلوبة",
+        "imageSelected": "تم اختيار الصورة بنجاح"
     }
 }

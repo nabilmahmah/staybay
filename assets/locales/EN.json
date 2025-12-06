@@ -1,10 +1,50 @@
 {
-    "wlecome":{
+    "welcome":{
         "WELCOME": "WELCOME",
         "des1": "Find your next space, Feel at home",
         "des2": "Where comfort meets convenience",
         "login": "Login",
         "signup": "Sign Up"
+    },
+    
+    "login": {
+        "title": "Login",
+        "subtitle": "Please enter your login details to log in.",
+        "phone": "Phone Number",
+        "password": "Password",
+        "login": "Login",
+        "forgotPassword": "Forgot password?",
+        "haveAccount": "Don't have an account?",
+        "createAccount": "Create account",
+        "phoneRequired": "Please enter phone number",
+        "phoneLengthError": "Phone Number must be exactly 10 digits",
+        "passwordRequired": "Please enter password",
+        "passwordLengthError": "Password must be between 8 and 16 characters"
     }
+,
+    "singup":{ 
+        "title": "Sign Up",
+        "firstName": "First Name",
+        "lastName": "Last Name",
+        "phone": "Phone Number",
+        "password": "Password",
+        "dob": "Date of Birth",
+        "idImage": "Identity Image",
+        "selectImage": "Select Image",
+        "resetImage": "Reset",
+        "signUp": "Sign Up",
+        "haveAccount": "Already have an account?",
+        "login": "Login",
+        "required": "This field is required",
+        "nameLengthError": "Max 20 characters allowed",
+        "phoneRequired": "Please enter phone number",
+        "phoneLengthError": "Phone Number must be exactly 10 digits",
+        "passwordRequired": "Please enter password",
+        "passwordLengthError": "Password must be between 8 and 16 characters",
+        "profileRequired": "Please select profile image.",
+        "idRequired": "Please select identity image.",
+        "allRequired": "Please fill all required fields",
+        "imageSelected": "Image selected successfully"
+}
     
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
-  // Light 
+  // Light
   static const Color primaryBlue = Color(0xFF013893);
   static const Color backgroundColor = Colors.white;
   static const Color outlineColor = Color(0xFFCCCCCC);
@@ -9,8 +9,8 @@ class AppColors {
   static const Color primaryText = Colors.black87;
   static const Color errorRed = Colors.red;
 
-  // Dark 
-  static const Color darkPrimaryBlue = Color(0xFF8AB4F8);
+  // Dark
+  static const Color darkPrimaryBlue = Color(0xFF6366F1);
   static const Color darkBackground = Color(0xFF121212);
   static const Color darkSurface = Color(0xFF1E1E1E);
   static const Color darkOutlineColor = Color(0xFF424242);
@@ -18,7 +18,6 @@ class AppColors {
 }
 
 class AppSizes {
-  
   static const double paddingSmall = 8.0;
   static const double paddingMedium = 16.0;
   static const double paddingLarge = 24.0;
@@ -26,7 +25,7 @@ class AppSizes {
 
   static const double borderRadiusSmall = 8.0;
   static const double borderRadiusLarge = 12.0;
-  static const double borderRadiusExtraLarge = 32.0; 
+  static const double borderRadiusExtraLarge = 32.0;
 
   static const double buttonHeight = 56.0;
 
@@ -36,15 +35,13 @@ class AppSizes {
   static const double fontSizeButton = 18.0;
 }
 
-
 class AppStyles {
- 
   static const TextStyle titleStyle = TextStyle(
     fontSize: AppSizes.fontSizeTitle,
     fontWeight: FontWeight.bold,
     color: AppColors.primaryText,
   );
- 
+
   static const TextStyle labelStyle = TextStyle(
     fontWeight: FontWeight.w600,
     fontSize: AppSizes.fontSizeLabel,
@@ -56,8 +53,8 @@ class AppStyles {
     fontSize: AppSizes.fontSizeButton,
     fontWeight: FontWeight.bold,
   );
-
 }
+
 /*
 class AppRoutes {
   static const String routeName = '/welcome';
@@ -93,7 +90,7 @@ class AppTheme {
         elevation: 0,
         centerTitle: true,
       ),
-      
+
       inputDecorationTheme: InputDecorationTheme(
         contentPadding: const EdgeInsets.symmetric(
           vertical: AppSizes.paddingMedium,
@@ -101,16 +98,22 @@ class AppTheme {
         ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppSizes.borderRadiusLarge),
-          borderSide: const BorderSide(color: AppColors.outlineColor, width: 1.5),
+          borderSide: const BorderSide(
+            color: AppColors.outlineColor,
+            width: 1.5,
+          ),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppSizes.borderRadiusLarge),
-          borderSide: const BorderSide(color: AppColors.outlineColor, width: 1.5),
+          borderSide: const BorderSide(
+            color: AppColors.outlineColor,
+            width: 1.5,
+          ),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppSizes.borderRadiusLarge),
           borderSide: const BorderSide(color: AppColors.primaryBlue, width: 2),
-          ),
+        ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppSizes.borderRadiusLarge),
           borderSide: const BorderSide(color: AppColors.errorRed, width: 1.5),
@@ -173,15 +176,24 @@ class AppTheme {
         ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppSizes.borderRadiusLarge),
-          borderSide: const BorderSide(color: AppColors.darkOutlineColor, width: 1.5),
+          borderSide: const BorderSide(
+            color: AppColors.darkOutlineColor,
+            width: 1.5,
+          ),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppSizes.borderRadiusLarge),
-          borderSide: const BorderSide(color: AppColors.darkOutlineColor, width: 1.5),
+          borderSide: const BorderSide(
+            color: AppColors.darkOutlineColor,
+            width: 1.5,
+          ),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppSizes.borderRadiusLarge),
-          borderSide: const BorderSide(color: AppColors.darkPrimaryBlue, width: 2),
+          borderSide: const BorderSide(
+            color: AppColors.darkPrimaryBlue,
+            width: 2,
+          ),
         ),
         hintStyle: AppStyles.labelStyle.copyWith(
           color: AppColors.darkSecondaryText,
@@ -196,7 +208,9 @@ class AppTheme {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(AppSizes.borderRadiusLarge),
           ),
-          textStyle: AppStyles.buttonTextStyle.copyWith(color: AppColors.darkSurface),
+          textStyle: AppStyles.buttonTextStyle.copyWith(
+            color: AppColors.darkSurface,
+          ),
           elevation: 5,
         ),
       ),

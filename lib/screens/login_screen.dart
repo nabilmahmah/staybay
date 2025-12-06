@@ -21,9 +21,9 @@ class _LoginScreenState extends State<LoginScreen> {
   final _passwordController = TextEditingController();
 
   bool _isPasswordVisible = false;
-  
+
   final Map<String, String> _texts = {
-    'languageOption': 'English',   
+    'languageOption': 'English',
     'title': 'Login',
     'subtitle': 'Please enter your login details to log in.',
     'phone': 'Phone Number',
@@ -47,10 +47,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void _handleLogin() {
     if (_formKey.currentState?.validate() ?? false) {
-      Navigator.of(context).pushNamed(
-        SuccessScreen.routeName,
-        arguments: true,
-      );
+      Navigator.of(context).pushNamed(SuccessScreen.routeName, arguments: true);
     }
   }
 
@@ -68,7 +65,9 @@ class _LoginScreenState extends State<LoginScreen> {
             padding: const EdgeInsets.all(AppSizes.paddingLarge),
             child: Center(
               child: ConstrainedBox(
-                constraints: BoxConstraints(maxWidth: screenWidth > 600 ? 500 : screenWidth),
+                constraints: BoxConstraints(
+                  maxWidth: screenWidth > 600 ? 500 : screenWidth,
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
@@ -76,14 +75,16 @@ class _LoginScreenState extends State<LoginScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          _texts['title']!, 
+                          _texts['title']!,
                           style: AppStyles.titleStyle.copyWith(
                             fontSize: AppSizes.fontSizeTitle * 0.9,
                             fontWeight: FontWeight.bold,
-                            color: Theme.of(context).textTheme.titleLarge!.color,
+                            color: Theme.of(
+                              context,
+                            ).textTheme.titleLarge!.color,
                           ),
                         ),
-                        
+
                         Text(
                           _texts['languageOption']!,
                           style: TextStyle(
@@ -94,14 +95,16 @@ class _LoginScreenState extends State<LoginScreen> {
                       ],
                     ),
                     SizedBox(height: screenHeight * 0.05),
-                    
+
                     Align(
                       alignment: Alignment.center,
                       child: Column(
                         children: [
                           CircleAvatar(
                             radius: screenHeight * 0.06,
-                            backgroundColor: Theme.of(context).primaryColor.withOpacity(0.1),
+                            backgroundColor: Theme.of(
+                              context,
+                            ).primaryColor.withOpacity(0.1),
                             child: Icon(
                               Icons.home_work_rounded,
                               size: screenHeight * 0.06,
@@ -112,12 +115,18 @@ class _LoginScreenState extends State<LoginScreen> {
                           Text(
                             'STAY BAY',
                             style: AppStyles.titleStyle.copyWith(
-                              color: Theme.of(context).textTheme.titleLarge!.color,
+                              color: Theme.of(
+                                context,
+                              ).textTheme.titleLarge!.color,
                             ),
                           ),
                           Text(
                             'Dream House',
-                            style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
+                            style: TextStyle(
+                              color: Theme.of(
+                                context,
+                              ).colorScheme.onSurfaceVariant,
+                            ),
                           ),
                         ],
                       ),
@@ -130,13 +139,15 @@ class _LoginScreenState extends State<LoginScreen> {
                       _texts['title']!,
                       style: AppStyles.titleStyle.copyWith(
                         fontSize: AppSizes.fontSizeTitle * 0.9,
-                        color:Theme.of(context).colorScheme.onSurfaceVariant,
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
                       ),
                       textAlign: TextAlign.left,
                     ),
                     Text(
                       _texts['subtitle']!,
-                      style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
                       textAlign: TextAlign.left,
                     ),
 
@@ -159,7 +170,12 @@ class _LoginScreenState extends State<LoginScreen> {
                               }
                               return null;
                             },
-                            suffixIcon: Icon(Icons.phone_android_outlined, color: Theme.of(context).colorScheme.onSurfaceVariant),
+                            suffixIcon: Icon(
+                              Icons.phone_android_outlined,
+                              color: Theme.of(
+                                context,
+                              ).colorScheme.onSurfaceVariant,
+                            ),
                           ),
 
                           verticalSpacer,
@@ -181,8 +197,12 @@ class _LoginScreenState extends State<LoginScreen> {
                             },
                             suffixIcon: IconButton(
                               icon: Icon(
-                                _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
-                                color: Theme.of(context).colorScheme.onSurfaceVariant,
+                                _isPasswordVisible
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.onSurfaceVariant,
                               ),
                               onPressed: () {
                                 setState(() {
@@ -219,12 +239,18 @@ class _LoginScreenState extends State<LoginScreen> {
                             children: [
                               Text(
                                 _texts['haveAccount']!,
-                                style: TextStyle(color: Theme.of(context).textTheme.bodyMedium!.color),
+                                style: TextStyle(
+                                  color: Theme.of(
+                                    context,
+                                  ).textTheme.bodyMedium!.color,
+                                ),
                               ),
                               const SizedBox(width: 5),
                               InkWell(
                                 onTap: () {
-                                  Navigator.of(context).pushNamed(SignUpScreen.routeName);
+                                  Navigator.of(
+                                    context,
+                                  ).pushNamed(SignUpScreen.routeName);
                                 },
                                 child: Text(
                                   _texts['createAccount']!,

@@ -19,7 +19,7 @@ class Test extends StatelessWidget {
                 child: Row(
                   children: [
                     Text(
-                      localestate.localizedStrings['hello'] ?? '',
+                      localestate.localizedStrings['welcome']['WELCOME'] ?? '',
                       style: TextStyle(color: Theme.of(context).primaryColor),
                     ),
                     Text(
@@ -59,4 +59,3 @@ class Test extends StatelessWidget {
     );
   }
 }
-

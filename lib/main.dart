@@ -23,27 +23,48 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: AppTheme.lightTheme,
-      darkTheme: AppTheme.darkTheme,
-      themeMode: ThemeMode.system,
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (context) => LocaleCubit()),
+        BlocProvider(create: (context) => ThemeCubit()),
+      ],
+      child: BlocBuilder<LocaleCubit, LocaleState>(
+        builder: (context, localeState) {
+          return BlocBuilder<ThemeCubit, ThemeState>(
+            builder: (context, themeState) {
+              return MaterialApp(
+                builder: (context, child) {
+                  return Directionality(
+                    textDirection: localeState.textDirection,
+                    child: child!,
+                  );
+                },
+                debugShowCheckedModeBanner: false,
+                theme: AppTheme.lightTheme,
+                darkTheme: AppTheme.darkTheme,
+                themeMode: themeState is DarkModeState
+                    ? ThemeMode.dark
+                    : ThemeMode.light,
 
-      //themeMode: ThemeMode.light,
-      initialRoute: WelcomeScreen.routeName,
+                initialRoute: WelcomeScreen.routeName,
+                routes: {
+                  WelcomeScreen.routeName: (context) => const WelcomeScreen(),
+                  LoginScreen.routeName: (context) => const LoginScreen(),
+                  SignUpScreen.routeName: (context) => const SignUpScreen(),
+                  HomePage.routeName: (context) => const HomePage(),
 
-      routes: {
-        WelcomeScreen.routeName: (context) => const WelcomeScreen(),
-        LoginScreen.routeName: (context) => const LoginScreen(),
-        SignUpScreen.routeName: (context) => const SignUpScreen(),
-        HomePage.routeName: (context) => const HomePage(),
-
-        SuccessScreen.routeName: (context) {
-          final isLogin =
-              ModalRoute.of(context)?.settings.arguments as bool? ?? true;
-          return SuccessScreen(isLoginSuccess: isLogin);
+                  SuccessScreen.routeName: (context) {
+                    final isLogin =
+                        ModalRoute.of(context)?.settings.arguments as bool? ??
+                        true;
+                    return SuccessScreen(isLoginSuccess: isLogin);
+                  },
+                },
+              );
+            },
+          );
         },
-      },
+      ),
     );
   }
 }

@@ -1,4 +1,9 @@
+import 'dart:developer';
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:staybay/cubits/locale/locale_state.dart';
 import '../app_theme.dart';
 import '../widgets/custom_text_field.dart';
 import '../widgets/custom_primary_button.dart';
@@ -7,7 +12,7 @@ import 'success_screen.dart';
 
 class SignUpScreen extends StatefulWidget {
   static const String routeName = '/signup';
-  
+
   const SignUpScreen({super.key});
 
   @override
@@ -17,9 +22,9 @@ class SignUpScreen extends StatefulWidget {
 class _SignUpScreenState extends State<SignUpScreen> {
   final _formKey = GlobalKey<FormState>();
   bool _isPasswordObscured = true;
-  
-  String? _profileImagePath;
-  String? _identityImagePath;
+
+  // String? _profileImageString;
+  // String? _identityImagePath;
 
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
@@ -51,16 +56,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
     'allRequired': 'Please fill all required fields',
     'imageSelected': 'Image selected successfully',
   };
-
-  @override
-  void dispose() {
-    _firstNameController.dispose();
-    _lastNameController.dispose();
-    _phoneController.dispose();
-    _passwordController.dispose();
-    _dateOfBirthController.dispose();
-    super.dispose();
-  }
+  // LocaleState localeState = context.read<LocaleState>().localizedStrings;
+  // @override
+  // void dispose() {
+  //   _firstNameController.dispose();
+  //   _lastNameController.dispose();
+  //   _phoneController.dispose();
+  //   _passwordController.dispose();
+  //   _dateOfBirthController.dispose();
+  //   super.dispose();
+  // }
 
   Future<void> _selectDateOfBirth() async {
     final theme = Theme.of(context);
@@ -73,32 +78,28 @@ class _SignUpScreenState extends State<SignUpScreen> {
       firstDate: DateTime(1900),
       lastDate: DateTime.now(),
       locale: const Locale('en'),
-      
+
       builder: (BuildContext context, Widget? child) {
         return Theme(
-          data: isDarkMode 
-            ? ThemeData.dark().copyWith(
-                colorScheme: ColorScheme.dark(
-                  primary: primaryColor,
-                  onPrimary: Colors.white,
-                  surface: Colors.black,
-                  onSurface: Colors.white,
-                ),
-                textButtonTheme: TextButtonThemeData(
-                  style: TextButton.styleFrom(
-                    foregroundColor: primaryColor,
+          data: isDarkMode
+              ? ThemeData.dark().copyWith(
+                  colorScheme: ColorScheme.dark(
+                    primary: primaryColor,
+                    onPrimary: Colors.white,
+                    surface: Colors.black,
+                    onSurface: Colors.white,
+                  ),
+                  textButtonTheme: TextButtonThemeData(
+                    style: TextButton.styleFrom(foregroundColor: primaryColor),
+                  ),
+                )
+              : Theme.of(context).copyWith(
+                  colorScheme: ColorScheme.light(
+                    primary: primaryColor,
+                    onPrimary: Colors.white,
+                    onSurface: theme.textTheme.bodyLarge!.color!,
                   ),
                 ),
-               dialogBackgroundColor: Colors.black,
-                
-              )
-            : Theme.of(context).copyWith(
-                colorScheme: ColorScheme.light(
-                  primary: primaryColor,
-                  onPrimary: Colors.white,
-                  onSurface: theme.textTheme.bodyLarge!.color!,
-                  ),
-              ),
           child: child!,
         );
       },
@@ -111,60 +112,70 @@ class _SignUpScreenState extends State<SignUpScreen> {
     }
   }
 
-  void _pickImage(bool isProfile) {
-    setState(() {
-      final String mockPath = 'Image path: ${DateTime.now().second}';
-      if (isProfile) {
-        _profileImagePath = mockPath;
+  File? _profileImage, _idImage;
+  String? _profileImageString, _idImageString;
+  final picker = ImagePicker();
+
+  Future<void> _pickImage(bool isProfileImage) async {
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      setState(() {
+        if (isProfileImage) {
+          _profileImage = File(pickedFile.path);
+          _profileImageString =
+              pickedFile.path; // تخزين المسار للاستخدام اللاحق
         } else {
-        _identityImagePath = mockPath;
-      }
-    });
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(_texts['imageSelected']!)),
-    );
-  }
+          _idImage = File(pickedFile.path);
+          _idImageString = pickedFile.path; // تخزين المسار للاستخدام اللاحق
+        }
 
-  void _resetImage(bool isProfile) {
-    setState(() {
-      if (isProfile) {
-        _profileImagePath = null;
-      } else {
-        _identityImagePath = null;
-      }
-    });
-  }
-void _handleSignUp() {
-    if (_formKey.currentState?.validate() ?? false) {
-      if (_profileImagePath == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(_texts['profileRequired']!)),
-        );
-        return;
-      }
-      if (_identityImagePath == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(_texts['idRequired']!)),
-        );
-        return;
-      }
-
-      Navigator.of(context).pushNamed(
-        SuccessScreen.routeName,
-        arguments: false,
-      );
+        // إظهار رسالة نجاح
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(_texts['imageSelected']!)));
+      });
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(_texts['allRequired']!)),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("No image selected.")));
+    }
+  }
+
+  void _handleSignUp() {
+    if (_formKey.currentState?.validate() ?? false) {
+      if (_profileImageString == null) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(_texts['profileRequired']!)));
+        return;
+      }
+      if (_idImageString == null) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(_texts['idRequired']!)));
+        return;
+      }
+
+      Navigator.of(
+        context,
+      ).pushNamed(SuccessScreen.routeName, arguments: false);
+    } else {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(_texts['allRequired']!)));
     }
   }
 
   Widget _buildImagePickerField(
-      String labelText, String? imagePath, VoidCallback onSelect, VoidCallback onReset) {
-    bool isImageSelected = imagePath != null;
+    String labelText,
+    File? image,
+    VoidCallback onSelect,
+    VoidCallback onReset,
+  ) {
+    bool isImageSelected = image != null;
     final theme = Theme.of(context);
-    
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -175,19 +186,21 @@ void _handleSignUp() {
           children: [
             Expanded(
               child: Text(
-                isImageSelected
-                    ? 'Image Selected'
-                    : 'No image selected yet',
+                isImageSelected ? 'Image Selected' : 'No image selected yet',
                 style: TextStyle(
-                  color: isImageSelected ? theme.primaryColor : theme.colorScheme.onSurfaceVariant,
-                  fontStyle: isImageSelected ? FontStyle.normal : FontStyle.italic,
+                  color: isImageSelected
+                      ? theme.primaryColor
+                      : theme.colorScheme.onSurfaceVariant,
+                  fontStyle: isImageSelected
+                      ? FontStyle.normal
+                      : FontStyle.italic,
                   fontSize: AppSizes.fontSizeLabel,
                 ),
                 overflow: TextOverflow.ellipsis,
               ),
             ),
             const SizedBox(width: AppSizes.paddingSmall),
-            
+
             OutlinedButton.icon(
               onPressed: onSelect,
               icon: const Icon(Icons.file_upload_outlined, size: 18),
@@ -195,28 +208,43 @@ void _handleSignUp() {
               style: OutlinedButton.styleFrom(
                 foregroundColor: theme.primaryColor,
                 side: BorderSide(color: theme.primaryColor),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSizes.borderRadiusSmall)),
-                padding: const EdgeInsets.symmetric(horizontal: AppSizes.paddingSmall, vertical: 0),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(
+                    AppSizes.borderRadiusSmall,
+                  ),
+                ),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppSizes.paddingSmall,
+                  vertical: 0,
+                ),
               ),
             ),
             const SizedBox(width: 5),
-            
+
             if (isImageSelected)
               OutlinedButton(
                 onPressed: onReset,
-                child: Text(_texts['resetImage']!),
                 style: OutlinedButton.styleFrom(
                   foregroundColor: theme.colorScheme.error,
                   side: BorderSide(color: theme.colorScheme.error),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSizes.borderRadiusSmall)),
-                  padding: const EdgeInsets.symmetric(horizontal: AppSizes.paddingSmall, vertical: 0),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(
+                      AppSizes.borderRadiusSmall,
+                    ),
+                  ),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSizes.paddingSmall,
+                    vertical: 0,
+                  ),
                 ),
+                child: Text(_texts['resetImage']!),
               ),
           ],
         ),
       ],
     );
   }
+
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
@@ -231,23 +259,30 @@ void _handleSignUp() {
           child: SingleChildScrollView(
             padding: const EdgeInsets.symmetric(
               horizontal: AppSizes.paddingMedium,
-              vertical: AppSizes.paddingLarge
+              vertical: AppSizes.paddingLarge,
             ),
             child: Center(
               child: ConstrainedBox(
-                constraints: BoxConstraints(maxWidth: screenWidth > 600 ? 500 : screenWidth),
+                constraints: BoxConstraints(
+                  maxWidth: screenWidth > 600 ? 500 : screenWidth,
+                ),
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: screenWidth > 600 ? AppSizes.paddingLarge : 0),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: screenWidth > 600 ? AppSizes.paddingLarge : 0,
+                  ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(_texts['title']!, style: AppStyles.titleStyle.copyWith(
-                            color: theme.textTheme.titleLarge!.color
-                          )),
-                          
+                          Text(
+                            _texts['title']!,
+                            style: AppStyles.titleStyle.copyWith(
+                              color: theme.textTheme.titleLarge!.color,
+                            ),
+                          ),
+
                           Text(
                             'English',
                             style: TextStyle(
@@ -262,35 +297,39 @@ void _handleSignUp() {
 
                       Center(
                         child: GestureDetector(
-                          onTap: () => _pickImage(true), 
+                          onTap: () {
+                            _pickImage(true);
+                            log(_profileImage.toString());
+                            _profileImageString = _profileImage.toString();
+                          },
                           child: Stack(
                             alignment: Alignment.bottomRight,
                             children: [
-                              
                               Container(
+                                width: 100,
+                                height: 100,
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
                                   border: Border.all(
                                     color: primaryColor,
                                     width: 3.0,
                                   ),
+                                  image: _profileImage != null
+                                      ? DecorationImage(
+                                          image: FileImage(_profileImage!),
+                                          fit: BoxFit.cover,
+                                        )
+                                      : null,
                                 ),
-                                child: CircleAvatar(
-                                  radius: 50,
-                                  backgroundColor: _profileImagePath != null
-                                      ? primaryColor
-                                      : theme.colorScheme.surfaceContainerHighest,
-                                  foregroundImage: _profileImagePath != null
-                                    ? const AssetImage('assets/profile_placeholder.png')
+                                child: _profileImage == null
+                                    ? Icon(
+                                        Icons.person,
+                                        size: 50,
+                                        color: primaryColor,
+                                      )
                                     : null,
-                                  child: _profileImagePath == null ? Icon(
-                                    Icons.person,
-                                    size: 50,
-                                    color: primaryColor, // لون الأيقونة
-                                  ) : null,
-                                ),
                               ),
-                               Positioned(
+                              Positioned(
                                 right: 0,
                                 bottom: 0,
                                 child: Container(
@@ -299,22 +338,34 @@ void _handleSignUp() {
                                     color: primaryColor,
                                     shape: BoxShape.circle,
                                   ),
-                                  child: const Icon(Icons.camera_alt, color: Colors.white, size: 20),
+                                  child: const Icon(
+                                    Icons.camera_alt,
+                                    color: Colors.white,
+                                    size: 20,
+                                  ),
                                 ),
                               ),
                             ],
                           ),
                         ),
                       ),
-                      if (_profileImagePath != null)
+                      if (_profileImageString != null)
                         Center(
                           child: TextButton(
-                            onPressed: () => _resetImage(true),
-                            child: Text(_texts['resetImage']!, style: TextStyle(color: theme.colorScheme.error)),
+                            onPressed: () {
+                              setState(() {
+                                _profileImage = null;
+                                _profileImageString = null;
+                              });
+                            },
+                            child: Text(
+                              _texts['resetImage']!,
+                              style: TextStyle(color: theme.colorScheme.error),
+                            ),
                           ),
                         ),
                       const SizedBox(height: AppSizes.paddingExtraLarge),
-                      
+
                       Form(
                         key: _formKey,
                         child: Column(
@@ -324,9 +375,12 @@ void _handleSignUp() {
                               hintText: _texts['firstName']!,
                               keyboardType: TextInputType.text,
                               maxLength: 20,
-                              suffixIcon: Icon(Icons.person_outline, color: theme.colorScheme.onSurfaceVariant),
+                              suffixIcon: Icon(
+                                Icons.person_outline,
+                                color: theme.colorScheme.onSurfaceVariant,
+                              ),
                               validator: (value) {
-                                if (value == null || value.isEmpty) { 
+                                if (value == null || value.isEmpty) {
                                   return _texts['required'];
                                 }
                                 if (value.length > 20) {
@@ -342,7 +396,10 @@ void _handleSignUp() {
                               hintText: _texts['lastName']!,
                               keyboardType: TextInputType.text,
                               maxLength: 20,
-                              suffixIcon: Icon(Icons.person_outline, color: theme.colorScheme.onSurfaceVariant),
+                              suffixIcon: Icon(
+                                Icons.person_outline,
+                                color: theme.colorScheme.onSurfaceVariant,
+                              ),
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
                                   return _texts['required'];
@@ -360,11 +417,14 @@ void _handleSignUp() {
                               hintText: _texts['phone']!,
                               keyboardType: TextInputType.phone,
                               maxLength: 10,
-                              suffixIcon: Icon(Icons.phone_android_outlined, color: theme.colorScheme.onSurfaceVariant),
+                              suffixIcon: Icon(
+                                Icons.phone_android_outlined,
+                                color: theme.colorScheme.onSurfaceVariant,
+                              ),
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
                                   return _texts['phoneRequired'];
-                                  }
+                                }
                                 if (value.length != 10) {
                                   return _texts['phoneLengthError'];
                                 }
@@ -382,14 +442,16 @@ void _handleSignUp() {
                                 if (value == null || value.isEmpty) {
                                   return _texts['passwordRequired'];
                                 }
-                                if (value.length < 8 || value.length > 16) { 
+                                if (value.length < 8 || value.length > 16) {
                                   return _texts['passwordLengthError'];
                                 }
                                 return null;
                               },
                               suffixIcon: IconButton(
                                 icon: Icon(
-                                  _isPasswordObscured ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+                                  _isPasswordObscured
+                                      ? Icons.visibility_off_outlined
+                                      : Icons.visibility_outlined,
                                   color: theme.colorScheme.onSurfaceVariant,
                                 ),
                                 onPressed: () {
@@ -407,16 +469,36 @@ void _handleSignUp() {
                               keyboardType: TextInputType.datetime,
                               readOnly: true,
                               onTap: _selectDateOfBirth,
-                              validator: (value) => (value == null || value.isEmpty) ? _texts['required'] : null, 
-                              suffixIcon: Icon(Icons.calendar_today, color: theme.colorScheme.onSurfaceVariant),
+                              validator: (value) =>
+                                  (value == null || value.isEmpty)
+                                  ? _texts['required']
+                                  : null,
+                              suffixIcon: Icon(
+                                Icons.calendar_today,
+                                color: theme.colorScheme.onSurfaceVariant,
+                              ),
                             ),
                             const SizedBox(height: AppSizes.paddingMedium),
                           ],
                         ),
                       ),
-                      
-                      _buildImagePickerField(_texts['idImage']!, _identityImagePath,
-                          () => _pickImage(false), () => _resetImage(false)),
+
+                      _buildImagePickerField(
+                        _texts['idImage']!,
+                        _idImage,
+                        () {
+                          setState(() {
+                            _pickImage(false);
+                            _idImageString = _idImage.toString();
+                          });
+                        },
+                        () {
+                          setState(() {
+                            _idImage = null;
+                            _idImageString = null;
+                          });
+                        },
+                      ),
                       const SizedBox(height: AppSizes.paddingExtraLarge),
 
                       CustomPrimaryButton(
@@ -428,12 +510,18 @@ void _handleSignUp() {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text(_texts['haveAccount']!,
-                              style: TextStyle(color: theme.colorScheme.onSurfaceVariant)),
+                          Text(
+                            _texts['haveAccount']!,
+                            style: TextStyle(
+                              color: theme.colorScheme.onSurfaceVariant,
+                            ),
+                          ),
                           const SizedBox(width: 5),
                           GestureDetector(
                             onTap: () {
-                              Navigator.of(context).pushNamed(LoginScreen.routeName);
+                              Navigator.of(
+                                context,
+                              ).pushNamed(LoginScreen.routeName);
                             },
                             child: Text(
                               _texts['login']!,
@@ -456,4 +544,3 @@ void _handleSignUp() {
     );
   }
 }
-
