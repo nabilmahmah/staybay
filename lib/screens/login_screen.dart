@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:staybay/cubits/locale/locale_cubit.dart';
+import 'package:staybay/cubits/locale/locale_state.dart';
 import '../app_theme.dart';
 import '../widgets/custom_primary_button.dart';
 import '../widgets/custom_text_field.dart';
@@ -57,221 +60,219 @@ class _LoginScreenState extends State<LoginScreen> {
     final screenWidth = MediaQuery.of(context).size.width;
     final verticalSpacer = SizedBox(height: screenHeight * 0.03);
 
-    return Directionality(
-      textDirection: TextDirection.ltr,
-      child: Scaffold(
-        body: SafeArea(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(AppSizes.paddingLarge),
-            child: Center(
-              child: ConstrainedBox(
-                constraints: BoxConstraints(
-                  maxWidth: screenWidth > 600 ? 500 : screenWidth,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          _texts['title']!,
-                          style: AppStyles.titleStyle.copyWith(
-                            fontSize: AppSizes.fontSizeTitle * 0.9,
-                            fontWeight: FontWeight.bold,
-                            color: Theme.of(
-                              context,
-                            ).textTheme.titleLarge!.color,
-                          ),
-                        ),
-
-                        Text(
-                          _texts['languageOption']!,
-                          style: TextStyle(
-                            color: Theme.of(context).primaryColor,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: screenHeight * 0.05),
-
-                    Align(
-                      alignment: Alignment.center,
-                      child: Column(
+    return BlocBuilder<LocaleCubit, LocaleState>(
+      builder: (context, state) {
+        return Scaffold(
+          body: SafeArea(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(AppSizes.paddingLarge),
+              child: Center(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxWidth: screenWidth > 600 ? 500 : screenWidth,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          CircleAvatar(
-                            radius: screenHeight * 0.06,
-                            backgroundColor: Theme.of(
-                              context,
-                            ).primaryColor.withOpacity(0.1),
-                            child: Icon(
-                              Icons.home_work_rounded,
-                              size: screenHeight * 0.06,
-                              color: Theme.of(context).primaryColor,
-                            ),
-                          ),
-                          SizedBox(height: screenHeight * 0.01),
                           Text(
-                            'STAY BAY',
+                            _texts['title']!,
                             style: AppStyles.titleStyle.copyWith(
+                              fontSize: AppSizes.fontSizeTitle * 0.9,
+                              fontWeight: FontWeight.bold,
                               color: Theme.of(
                                 context,
                               ).textTheme.titleLarge!.color,
                             ),
                           ),
-                          Text(
-                            'Dream House',
-                            style: TextStyle(
-                              color: Theme.of(
-                                context,
-                              ).colorScheme.onSurfaceVariant,
+
+                          TextButton(
+                            onPressed: () {
+                              String newLanguage = state.currentLanguage == 'EN'
+                                  ? 'AR'
+                                  : 'EN';
+                              context.read<LocaleCubit>().changeLanguage(
+                                newLanguage,
+                              );
+                            },
+                            child: Text(
+                              state.currentLanguage,
+                              style: TextStyle(
+                                color: Theme.of(context).primaryColor,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
                         ],
                       ),
-                    ),
+                      SizedBox(height: screenHeight * 0.05),
 
-                    verticalSpacer,
-                    SizedBox(height: screenHeight * 0.02),
-
-                    Text(
-                      _texts['title']!,
-                      style: AppStyles.titleStyle.copyWith(
-                        fontSize: AppSizes.fontSizeTitle * 0.9,
-                        color: Theme.of(context).colorScheme.onSurfaceVariant,
-                      ),
-                      textAlign: TextAlign.left,
-                    ),
-                    Text(
-                      _texts['subtitle']!,
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.onSurfaceVariant,
-                      ),
-                      textAlign: TextAlign.left,
-                    ),
-
-                    SizedBox(height: screenHeight * 0.04),
-                    Form(
-                      key: _formKey,
-                      child: Column(
-                        children: [
-                          CustomTextField(
-                            controller: _phoneController,
-                            hintText: _texts['phone']!,
-                            keyboardType: TextInputType.phone,
-                            maxLength: 10,
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return _texts['phoneRequired'];
-                              }
-                              if (value.length != 10) {
-                                return _texts['phoneLengthError'];
-                              }
-                              return null;
-                            },
-                            suffixIcon: Icon(
-                              Icons.phone_android_outlined,
-                              color: Theme.of(
+                      Align(
+                        alignment: Alignment.center,
+                        child: Column(
+                          children: [
+                            CircleAvatar(
+                              radius: screenHeight * 0.06,
+                              backgroundColor: Theme.of(
                                 context,
-                              ).colorScheme.onSurfaceVariant,
+                              ).primaryColor.withOpacity(0.1),
+                              child: Icon(
+                                Icons.home_work_rounded,
+                                size: screenHeight * 0.06,
+                                color: Theme.of(context).primaryColor,
+                              ),
                             ),
-                          ),
-
-                          verticalSpacer,
-
-                          CustomTextField(
-                            controller: _passwordController,
-                            hintText: _texts['password']!,
-                            isPassword: !_isPasswordVisible,
-                            keyboardType: TextInputType.visiblePassword,
-                            maxLength: 16,
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return _texts['passwordRequired'];
-                              }
-                              if (value.length < 8 || value.length > 16) {
-                                return _texts['passwordLengthError'];
-                              }
-                              return null;
-                            },
-                            suffixIcon: IconButton(
-                              icon: Icon(
-                                _isPasswordVisible
-                                    ? Icons.visibility
-                                    : Icons.visibility_off,
+                            SizedBox(height: screenHeight * 0.01),
+                            Text(
+                              'STAY BAY',
+                              style: AppStyles.titleStyle.copyWith(
+                                color: Theme.of(
+                                  context,
+                                ).textTheme.titleLarge!.color,
+                              ),
+                            ),
+                            Text(
+                              'Dream House',
+                              style: TextStyle(
                                 color: Theme.of(
                                   context,
                                 ).colorScheme.onSurfaceVariant,
                               ),
-                              onPressed: () {
-                                setState(() {
-                                  _isPasswordVisible = !_isPasswordVisible;
-                                });
-                              },
                             ),
-                          ),
-                          Align(
-                            alignment: Alignment.bottomRight,
-                            child: TextButton(
-                              onPressed: () {},
-                              child: Text(
-                                _texts['forgotPassword']!,
-                                style: TextStyle(
-                                  color: Theme.of(context).primaryColor,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                          ],
+                        ),
+                      ),
+
+                      verticalSpacer,
+                      SizedBox(height: screenHeight * 0.02),
+
+                      Text(
+                        _texts['title']!,
+                        style: AppStyles.titleStyle.copyWith(
+                          fontSize: AppSizes.fontSizeTitle * 0.9,
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        ),
+                        textAlign: TextAlign.left,
+                      ),
+                      Text(
+                        _texts['subtitle']!,
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        ),
+                        textAlign: TextAlign.left,
+                      ),
+
+                      SizedBox(height: screenHeight * 0.04),
+                      Form(
+                        key: _formKey,
+                        child: Column(
+                          children: [
+                            CustomTextField(
+                              controller: _phoneController,
+                              hintText: _texts['phone']!,
+                              keyboardType: TextInputType.phone,
+                              maxLength: 10,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return _texts['phoneRequired'];
+                                }
+                                if (value.length != 10) {
+                                  return _texts['phoneLengthError'];
+                                }
+                                return null;
+                              },
+                              suffixIcon: Icon(
+                                Icons.phone_android_outlined,
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.onSurfaceVariant,
                               ),
                             ),
-                          ),
 
-                          verticalSpacer,
+                            verticalSpacer,
 
-                          CustomPrimaryButton(
-                            text: _texts['login']!,
-                            onPressed: _handleLogin,
-                          ),
-
-                          verticalSpacer,
-
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                _texts['haveAccount']!,
-                                style: TextStyle(
+                            CustomTextField(
+                              controller: _passwordController,
+                              hintText: _texts['password']!,
+                              isPassword: !_isPasswordVisible,
+                              keyboardType: TextInputType.visiblePassword,
+                              maxLength: 16,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return _texts['passwordRequired'];
+                                }
+                                if (value.length < 8 || value.length > 16) {
+                                  return _texts['passwordLengthError'];
+                                }
+                                return null;
+                              },
+                              suffixIcon: IconButton(
+                                icon: Icon(
+                                  _isPasswordVisible
+                                      ? Icons.visibility
+                                      : Icons.visibility_off,
                                   color: Theme.of(
                                     context,
-                                  ).textTheme.bodyMedium!.color,
+                                  ).colorScheme.onSurfaceVariant,
                                 ),
-                              ),
-                              const SizedBox(width: 5),
-                              InkWell(
-                                onTap: () {
-                                  Navigator.of(
-                                    context,
-                                  ).pushNamed(SignUpScreen.routeName);
+                                onPressed: () {
+                                  setState(() {
+                                    _isPasswordVisible = !_isPasswordVisible;
+                                  });
                                 },
-                                child: Text(
-                                  _texts['createAccount']!,
+                              ),
+                            ),
+
+                            verticalSpacer,
+
+                            CustomPrimaryButton(
+                              text: _texts['login']!,
+                              onPressed: _handleLogin,
+                            ),
+
+                            verticalSpacer,
+
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  _texts['haveAccount']!,
                                   style: TextStyle(
-                                    color: Theme.of(context).primaryColor,
-                                    fontWeight: FontWeight.bold,
+                                    color: Theme.of(
+                                      context,
+                                    ).textTheme.bodyMedium!.color,
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
-                        ],
+                                const SizedBox(width: 5),
+                                InkWell(
+                                  onTap: () {
+                                    Navigator.of(
+                                      context,
+                                    ).pushNamed(SignUpScreen.routeName);
+                                  },
+                                  child: Text(
+                                    _texts['createAccount']!,
+                                    style: TextStyle(
+                                      color: Theme.of(context).primaryColor,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }

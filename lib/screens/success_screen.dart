@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:staybay/screens/welcome_screen.dart';
 import '../app_theme.dart';
 import '../widgets/custom_primary_button.dart';
 import 'home_page_screen.dart';
 
 class SuccessScreen extends StatelessWidget {
   static const String routeName = '/success';
-  final bool isLoginSuccess; 
+  final bool isLoginSuccess;
 
   const SuccessScreen({super.key, this.isLoginSuccess = true});
 
@@ -15,11 +16,11 @@ class SuccessScreen extends StatelessWidget {
     final theme = Theme.of(context);
     final primaryColor = theme.primaryColor;
 
-    final String title = isLoginSuccess 
-        ? 'Thank you, login succeeded!' 
+    final String title = isLoginSuccess
+        ? 'Thank you, login succeeded!'
         : 'Thank you, registration succeeded!';
     final String buttonText = 'Go to Home Page';
-    final String secondaryText = isLoginSuccess 
+    final String secondaryText = isLoginSuccess
         ? 'You have successfully logged into your account.'
         : 'Your account has been created successfully.';
 
@@ -31,23 +32,19 @@ class SuccessScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-                
               Container(
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   // لون الإطار الخارجي
-                  border: Border.all(
-                    color: primaryColor,
-                    width: 3.0, 
-                  ),
+                  border: Border.all(color: primaryColor, width: 3.0),
                 ),
                 child: CircleAvatar(
                   radius: screenHeight * 0.1,
-                  backgroundColor: primaryColor, 
+                  backgroundColor: primaryColor,
                   child: Icon(
                     Icons.check,
                     size: screenHeight * 0.08,
-                    color: Colors.white, 
+                    color: Colors.white,
                   ),
                 ),
               ),
@@ -63,7 +60,7 @@ class SuccessScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: AppSizes.paddingSmall),
-              
+
               Text(
                 secondaryText,
                 textAlign: TextAlign.center,
@@ -74,18 +71,30 @@ class SuccessScreen extends StatelessWidget {
               ),
 
               SizedBox(height: screenHeight * 0.08),
-              
+
               CustomPrimaryButton(
                 text: buttonText,
                 onPressed: () {
-                  Navigator.of(context).pushReplacementNamed(HomePage.routeName);
+                  if (isLoginSuccess) {
+                    Navigator.of(context).pushNamedAndRemoveUntil(
+                      HomePage.routeName,
+                      (Route<dynamic> route) => false,
+                    );
+                  } else {
+                    Navigator.of(context).pushNamedAndRemoveUntil(
+                      WelcomeScreen.routeName,
+                      (Route<dynamic> route) => false,
+                    );
+                  }
                 },
               ),
-              
+
               SizedBox(height: screenHeight * 0.03),
 
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: AppSizes.paddingMedium),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppSizes.paddingMedium,
+                ),
                 child: Text(
                   'By continuing, you agree to our Terms of Service and Privacy Policy',
                   textAlign: TextAlign.center,

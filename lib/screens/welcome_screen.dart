@@ -85,7 +85,7 @@ class WelcomeScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Text(
-                        state.localizedStrings['welcome']['WELCOME'] ?? '',
+                        'WELCOME',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 34,

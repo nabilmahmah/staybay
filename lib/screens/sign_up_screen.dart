@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:staybay/cubits/locale/locale_cubit.dart';
 import 'package:staybay/cubits/locale/locale_state.dart';
 import '../app_theme.dart';
 import '../widgets/custom_text_field.dart';
@@ -123,14 +124,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
       setState(() {
         if (isProfileImage) {
           _profileImage = File(pickedFile.path);
-          _profileImageString =
-              pickedFile.path; // تخزين المسار للاستخدام اللاحق
+          _profileImageString = pickedFile.path;
         } else {
           _idImage = File(pickedFile.path);
-          _idImageString = pickedFile.path; // تخزين المسار للاستخدام اللاحق
+          _idImageString = pickedFile.path;
         }
 
-        // إظهار رسالة نجاح
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(SnackBar(content: Text(_texts['imageSelected']!)));
@@ -251,296 +250,309 @@ class _SignUpScreenState extends State<SignUpScreen> {
     final theme = Theme.of(context);
     final primaryColor = theme.primaryColor;
 
-    return Directionality(
-      textDirection: TextDirection.ltr,
-      child: Scaffold(
-        backgroundColor: theme.scaffoldBackgroundColor,
-        body: SafeArea(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(
-              horizontal: AppSizes.paddingMedium,
-              vertical: AppSizes.paddingLarge,
-            ),
-            child: Center(
-              child: ConstrainedBox(
-                constraints: BoxConstraints(
-                  maxWidth: screenWidth > 600 ? 500 : screenWidth,
-                ),
-                child: Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: screenWidth > 600 ? AppSizes.paddingLarge : 0,
+    return BlocBuilder<LocaleCubit, LocaleState>(
+      builder: (context, state) {
+        return Scaffold(
+          backgroundColor: theme.scaffoldBackgroundColor,
+          body: SafeArea(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppSizes.paddingMedium,
+                vertical: AppSizes.paddingLarge,
+              ),
+              child: Center(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxWidth: screenWidth > 600 ? 500 : screenWidth,
                   ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            _texts['title']!,
-                            style: AppStyles.titleStyle.copyWith(
-                              color: theme.textTheme.titleLarge!.color,
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: screenWidth > 600 ? AppSizes.paddingLarge : 0,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              _texts['title']!,
+                              style: AppStyles.titleStyle.copyWith(
+                                color: theme.textTheme.titleLarge!.color,
+                              ),
                             ),
-                          ),
 
-                          Text(
-                            'English',
-                            style: TextStyle(
-                              color: theme.textTheme.titleLarge!.color,
-                              fontWeight: FontWeight.bold,
-                              fontSize: AppSizes.fontSizeLabel,
+                            TextButton(
+                              onPressed: () {
+                                String newLanguage =
+                                    state.currentLanguage == 'EN' ? 'AR' : 'EN';
+                                context.read<LocaleCubit>().changeLanguage(
+                                  newLanguage,
+                                );
+                              },
+                              child: Text(
+                                state.currentLanguage,
+                                style: TextStyle(
+                                  color: theme.textTheme.titleLarge!.color,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: AppSizes.fontSizeLabel,
+                                ),
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: AppSizes.paddingExtraLarge),
+                          ],
+                        ),
+                        const SizedBox(height: AppSizes.paddingExtraLarge),
 
-                      Center(
-                        child: GestureDetector(
-                          onTap: () {
-                            _pickImage(true);
-                            log(_profileImage.toString());
-                            _profileImageString = _profileImage.toString();
-                          },
-                          child: Stack(
-                            alignment: Alignment.bottomRight,
-                            children: [
-                              Container(
-                                width: 100,
-                                height: 100,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  border: Border.all(
-                                    color: primaryColor,
-                                    width: 3.0,
+                        Center(
+                          child: GestureDetector(
+                            onTap: () {
+                              _pickImage(true);
+                              log(_profileImage.toString());
+                              _profileImageString = _profileImage.toString();
+                            },
+                            child: Stack(
+                              alignment: Alignment.bottomRight,
+                              children: [
+                                Container(
+                                  width: 100,
+                                  height: 100,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    border: Border.all(
+                                      color: primaryColor,
+                                      width: 3.0,
+                                    ),
+                                    image: _profileImage != null
+                                        ? DecorationImage(
+                                            image: FileImage(_profileImage!),
+                                            fit: BoxFit.cover,
+                                          )
+                                        : null,
                                   ),
-                                  image: _profileImage != null
-                                      ? DecorationImage(
-                                          image: FileImage(_profileImage!),
-                                          fit: BoxFit.cover,
+                                  child: _profileImage == null
+                                      ? Icon(
+                                          Icons.person,
+                                          size: 50,
+                                          color: primaryColor,
                                         )
                                       : null,
                                 ),
-                                child: _profileImage == null
-                                    ? Icon(
-                                        Icons.person,
-                                        size: 50,
-                                        color: primaryColor,
-                                      )
-                                    : null,
-                              ),
-                              Positioned(
-                                right: 0,
-                                bottom: 0,
-                                child: Container(
-                                  padding: const EdgeInsets.all(4),
-                                  decoration: BoxDecoration(
-                                    color: primaryColor,
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child: const Icon(
-                                    Icons.camera_alt,
-                                    color: Colors.white,
-                                    size: 20,
+                                Positioned(
+                                  right: 0,
+                                  bottom: 0,
+                                  child: Container(
+                                    padding: const EdgeInsets.all(4),
+                                    decoration: BoxDecoration(
+                                      color: primaryColor,
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: const Icon(
+                                      Icons.camera_alt,
+                                      color: Colors.white,
+                                      size: 20,
+                                    ),
                                   ),
                                 ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        if (_profileImageString != null)
+                          Center(
+                            child: TextButton(
+                              onPressed: () {
+                                setState(() {
+                                  _profileImage = null;
+                                  _profileImageString = null;
+                                });
+                              },
+                              child: Text(
+                                _texts['resetImage']!,
+                                style: TextStyle(
+                                  color: theme.colorScheme.error,
+                                ),
                               ),
+                            ),
+                          ),
+                        const SizedBox(height: AppSizes.paddingExtraLarge),
+
+                        Form(
+                          key: _formKey,
+                          child: Column(
+                            children: [
+                              CustomTextField(
+                                controller: _firstNameController,
+                                hintText: _texts['firstName']!,
+                                keyboardType: TextInputType.text,
+                                maxLength: 20,
+                                suffixIcon: Icon(
+                                  Icons.person_outline,
+                                  color: theme.colorScheme.onSurfaceVariant,
+                                ),
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return _texts['required'];
+                                  }
+                                  if (value.length > 20) {
+                                    return _texts['nameLengthError'];
+                                  }
+                                  return null;
+                                },
+                              ),
+                              const SizedBox(height: AppSizes.paddingMedium),
+
+                              CustomTextField(
+                                controller: _lastNameController,
+                                hintText: _texts['lastName']!,
+                                keyboardType: TextInputType.text,
+                                maxLength: 20,
+                                suffixIcon: Icon(
+                                  Icons.person_outline,
+                                  color: theme.colorScheme.onSurfaceVariant,
+                                ),
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return _texts['required'];
+                                  }
+                                  if (value.length > 20) {
+                                    return _texts['nameLengthError'];
+                                  }
+                                  return null;
+                                },
+                              ),
+                              const SizedBox(height: AppSizes.paddingMedium),
+
+                              CustomTextField(
+                                controller: _phoneController,
+                                hintText: _texts['phone']!,
+                                keyboardType: TextInputType.phone,
+                                maxLength: 10,
+                                suffixIcon: Icon(
+                                  Icons.phone_android_outlined,
+                                  color: theme.colorScheme.onSurfaceVariant,
+                                ),
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return _texts['phoneRequired'];
+                                  }
+                                  if (value.length != 10) {
+                                    return _texts['phoneLengthError'];
+                                  }
+                                  return null;
+                                },
+                              ),
+                              const SizedBox(height: AppSizes.paddingMedium),
+
+                              CustomTextField(
+                                controller: _passwordController,
+                                hintText: _texts['password']!,
+                                isPassword: _isPasswordObscured,
+                                maxLength: 16,
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return _texts['passwordRequired'];
+                                  }
+                                  if (value.length < 8 || value.length > 16) {
+                                    return _texts['passwordLengthError'];
+                                  }
+                                  return null;
+                                },
+                                suffixIcon: IconButton(
+                                  icon: Icon(
+                                    _isPasswordObscured
+                                        ? Icons.visibility_off_outlined
+                                        : Icons.visibility_outlined,
+                                    color: theme.colorScheme.onSurfaceVariant,
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      _isPasswordObscured =
+                                          !_isPasswordObscured;
+                                    });
+                                  },
+                                ),
+                              ),
+                              const SizedBox(height: AppSizes.paddingMedium),
+                              CustomTextField(
+                                controller: _dateOfBirthController,
+                                hintText: _texts['dob']!,
+                                maxLength: 16,
+                                keyboardType: TextInputType.datetime,
+                                readOnly: true,
+                                onTap: _selectDateOfBirth,
+                                validator: (value) =>
+                                    (value == null || value.isEmpty)
+                                    ? _texts['required']
+                                    : null,
+                                suffixIcon: Icon(
+                                  Icons.calendar_today,
+                                  color: theme.colorScheme.onSurfaceVariant,
+                                ),
+                              ),
+                              const SizedBox(height: AppSizes.paddingMedium),
                             ],
                           ),
                         ),
-                      ),
-                      if (_profileImageString != null)
-                        Center(
-                          child: TextButton(
-                            onPressed: () {
-                              setState(() {
-                                _profileImage = null;
-                                _profileImageString = null;
-                              });
-                            },
-                            child: Text(
-                              _texts['resetImage']!,
-                              style: TextStyle(color: theme.colorScheme.error),
-                            ),
-                          ),
+
+                        _buildImagePickerField(
+                          _texts['idImage']!,
+                          _idImage,
+                          () {
+                            setState(() {
+                              _pickImage(false);
+                              _idImageString = _idImage.toString();
+                            });
+                          },
+                          () {
+                            setState(() {
+                              _idImage = null;
+                              _idImageString = null;
+                            });
+                          },
                         ),
-                      const SizedBox(height: AppSizes.paddingExtraLarge),
+                        const SizedBox(height: AppSizes.paddingExtraLarge),
 
-                      Form(
-                        key: _formKey,
-                        child: Column(
+                        CustomPrimaryButton(
+                          text: _texts['signUp']!,
+                          onPressed: _handleSignUp,
+                        ),
+                        const SizedBox(height: AppSizes.paddingMedium),
+
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            CustomTextField(
-                              controller: _firstNameController,
-                              hintText: _texts['firstName']!,
-                              keyboardType: TextInputType.text,
-                              maxLength: 20,
-                              suffixIcon: Icon(
-                                Icons.person_outline,
+                            Text(
+                              _texts['haveAccount']!,
+                              style: TextStyle(
                                 color: theme.colorScheme.onSurfaceVariant,
                               ),
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return _texts['required'];
-                                }
-                                if (value.length > 20) {
-                                  return _texts['nameLengthError'];
-                                }
-                                return null;
-                              },
                             ),
-                            const SizedBox(height: AppSizes.paddingMedium),
-
-                            CustomTextField(
-                              controller: _lastNameController,
-                              hintText: _texts['lastName']!,
-                              keyboardType: TextInputType.text,
-                              maxLength: 20,
-                              suffixIcon: Icon(
-                                Icons.person_outline,
-                                color: theme.colorScheme.onSurfaceVariant,
-                              ),
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return _texts['required'];
-                                }
-                                if (value.length > 20) {
-                                  return _texts['nameLengthError'];
-                                }
-                                return null;
+                            const SizedBox(width: 5),
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.of(
+                                  context,
+                                ).pushNamed(LoginScreen.routeName);
                               },
-                            ),
-                            const SizedBox(height: AppSizes.paddingMedium),
-
-                            CustomTextField(
-                              controller: _phoneController,
-                              hintText: _texts['phone']!,
-                              keyboardType: TextInputType.phone,
-                              maxLength: 10,
-                              suffixIcon: Icon(
-                                Icons.phone_android_outlined,
-                                color: theme.colorScheme.onSurfaceVariant,
-                              ),
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return _texts['phoneRequired'];
-                                }
-                                if (value.length != 10) {
-                                  return _texts['phoneLengthError'];
-                                }
-                                return null;
-                              },
-                            ),
-                            const SizedBox(height: AppSizes.paddingMedium),
-
-                            CustomTextField(
-                              controller: _passwordController,
-                              hintText: _texts['password']!,
-                              isPassword: _isPasswordObscured,
-                              maxLength: 16,
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return _texts['passwordRequired'];
-                                }
-                                if (value.length < 8 || value.length > 16) {
-                                  return _texts['passwordLengthError'];
-                                }
-                                return null;
-                              },
-                              suffixIcon: IconButton(
-                                icon: Icon(
-                                  _isPasswordObscured
-                                      ? Icons.visibility_off_outlined
-                                      : Icons.visibility_outlined,
-                                  color: theme.colorScheme.onSurfaceVariant,
+                              child: Text(
+                                _texts['login']!,
+                                style: TextStyle(
+                                  color: theme.primaryColor,
+                                  fontWeight: FontWeight.bold,
                                 ),
-                                onPressed: () {
-                                  setState(() {
-                                    _isPasswordObscured = !_isPasswordObscured;
-                                  });
-                                },
                               ),
                             ),
-                            const SizedBox(height: AppSizes.paddingMedium),
-                            CustomTextField(
-                              controller: _dateOfBirthController,
-                              hintText: _texts['dob']!,
-                              maxLength: 16,
-                              keyboardType: TextInputType.datetime,
-                              readOnly: true,
-                              onTap: _selectDateOfBirth,
-                              validator: (value) =>
-                                  (value == null || value.isEmpty)
-                                  ? _texts['required']
-                                  : null,
-                              suffixIcon: Icon(
-                                Icons.calendar_today,
-                                color: theme.colorScheme.onSurfaceVariant,
-                              ),
-                            ),
-                            const SizedBox(height: AppSizes.paddingMedium),
                           ],
                         ),
-                      ),
-
-                      _buildImagePickerField(
-                        _texts['idImage']!,
-                        _idImage,
-                        () {
-                          setState(() {
-                            _pickImage(false);
-                            _idImageString = _idImage.toString();
-                          });
-                        },
-                        () {
-                          setState(() {
-                            _idImage = null;
-                            _idImageString = null;
-                          });
-                        },
-                      ),
-                      const SizedBox(height: AppSizes.paddingExtraLarge),
-
-                      CustomPrimaryButton(
-                        text: _texts['signUp']!,
-                        onPressed: _handleSignUp,
-                      ),
-                      const SizedBox(height: AppSizes.paddingMedium),
-
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            _texts['haveAccount']!,
-                            style: TextStyle(
-                              color: theme.colorScheme.onSurfaceVariant,
-                            ),
-                          ),
-                          const SizedBox(width: 5),
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.of(
-                                context,
-                              ).pushNamed(LoginScreen.routeName);
-                            },
-                            child: Text(
-                              _texts['login']!,
-                              style: TextStyle(
-                                color: theme.primaryColor,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
             ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }
