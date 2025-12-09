@@ -44,7 +44,17 @@
         "profileRequired": "Please select profile image.",
         "idRequired": "Please select identity image.",
         "allRequired": "Please fill all required fields",
-        "imageSelected": "Image selected successfully"
+        "imageSelected": "Image selected successfully",
+        "No image selected":"No image selected",
+        "Image Selected":"Image Selected"
 }
-    
+,
+    "Success":{
+        "login succeeded":"Thank you, login succeeded!",
+        "registration succeeded":"Thank you, registration succeeded!",
+        "Home Page":"Go to Home Page",
+        "successfully logged":"You have successfully logged into your account.",
+        "created successfully":"Your account has been created successfully.",
+        "agree":"By continuing, you agree to our Terms of Service and Privacy Policy"
+    }   
 }

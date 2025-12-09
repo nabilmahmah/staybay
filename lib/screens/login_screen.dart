@@ -25,28 +25,14 @@ class _LoginScreenState extends State<LoginScreen> {
 
   bool _isPasswordVisible = false;
 
-  final Map<String, String> _texts = {
-    'languageOption': 'English',
-    'title': 'Login',
-    'subtitle': 'Please enter your login details to log in.',
-    'phone': 'Phone Number',
-    'password': 'Password',
-    'login': 'Log in',
-    'forgotPassword': 'Forgot password?',
-    'haveAccount': "Don't have an account?",
-    'createAccount': 'Create account',
-    'phoneRequired': 'Please enter phone number',
-    'phoneLengthError': 'Phone Number must be exactly 10 digits',
-    'passwordRequired': 'Please enter password',
-    'passwordLengthError': 'Password must be between 8 and 16 characters',
-  };
-
-  @override
-  void dispose() {
-    _phoneController.dispose();
-    _passwordController.dispose();
-    super.dispose();
-  }
+  Map<String, dynamic> get locale =>
+      context.read<LocaleCubit>().state.localizedStrings['login'];
+  // @override
+  // void dispose() {
+  //   _phoneController.dispose();
+  //   _passwordController.dispose();
+  //   super.dispose();
+  // }
 
   void _handleLogin() {
     if (_formKey.currentState?.validate() ?? false) {
@@ -78,7 +64,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            _texts['title']!,
+                            locale['title'] ?? 'Login',
                             style: AppStyles.titleStyle.copyWith(
                               fontSize: AppSizes.fontSizeTitle * 0.9,
                               fontWeight: FontWeight.bold,
@@ -149,19 +135,20 @@ class _LoginScreenState extends State<LoginScreen> {
                       SizedBox(height: screenHeight * 0.02),
 
                       Text(
-                        _texts['title']!,
+                        locale['title'] ?? 'Login',
                         style: AppStyles.titleStyle.copyWith(
                           fontSize: AppSizes.fontSizeTitle * 0.9,
                           color: Theme.of(context).colorScheme.onSurfaceVariant,
                         ),
-                        textAlign: TextAlign.left,
+                        textAlign: TextAlign.start,
                       ),
                       Text(
-                        _texts['subtitle']!,
+                        locale['subtitle'] ??
+                            'Please enter your login details to log in.',
                         style: TextStyle(
                           color: Theme.of(context).colorScheme.onSurfaceVariant,
                         ),
-                        textAlign: TextAlign.left,
+                        textAlign: TextAlign.start,
                       ),
 
                       SizedBox(height: screenHeight * 0.04),
@@ -171,15 +158,19 @@ class _LoginScreenState extends State<LoginScreen> {
                           children: [
                             CustomTextField(
                               controller: _phoneController,
-                              hintText: _texts['phone']!,
+                              hintText: locale['phone'] ?? 'Phone Number',
                               keyboardType: TextInputType.phone,
                               maxLength: 10,
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
-                                  return _texts['phoneRequired'];
+                                  return state
+                                          .localizedStrings['login']['phoneRequired'] ??
+                                      'Please enter password';
                                 }
                                 if (value.length != 10) {
-                                  return _texts['phoneLengthError'];
+                                  return state
+                                          .localizedStrings['login']['phoneLengthError'] ??
+                                      'Password must be between 8 and 16 characters';
                                 }
                                 return null;
                               },
@@ -195,16 +186,20 @@ class _LoginScreenState extends State<LoginScreen> {
 
                             CustomTextField(
                               controller: _passwordController,
-                              hintText: _texts['password']!,
+                              hintText: locale['password'] ?? 'Password',
                               isPassword: !_isPasswordVisible,
                               keyboardType: TextInputType.visiblePassword,
                               maxLength: 16,
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
-                                  return _texts['passwordRequired'];
+                                  return state
+                                          .localizedStrings['login']['passwordRequired'] ??
+                                      'Please enter password';
                                 }
                                 if (value.length < 8 || value.length > 16) {
-                                  return _texts['passwordLengthError'];
+                                  return state
+                                          .localizedStrings['login']['passwordLengthError'] ??
+                                      'Password must be between 8 and 16 characters';
                                 }
                                 return null;
                               },
@@ -228,7 +223,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             verticalSpacer,
 
                             CustomPrimaryButton(
-                              text: _texts['login']!,
+                              text: locale['login'] ?? 'Login',
                               onPressed: _handleLogin,
                             ),
 
@@ -238,7 +233,8 @@ class _LoginScreenState extends State<LoginScreen> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
-                                  _texts['haveAccount']!,
+                                  locale['haveAccount'] ??
+                                      "Don't have an account?",
                                   style: TextStyle(
                                     color: Theme.of(
                                       context,
@@ -253,7 +249,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     ).pushNamed(SignUpScreen.routeName);
                                   },
                                   child: Text(
-                                    _texts['createAccount']!,
+                                    locale['createAccount'] ?? 'Create account',
                                     style: TextStyle(
                                       color: Theme.of(context).primaryColor,
                                       fontWeight: FontWeight.bold,

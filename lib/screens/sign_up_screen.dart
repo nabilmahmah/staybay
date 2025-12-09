@@ -24,39 +24,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final _formKey = GlobalKey<FormState>();
   bool _isPasswordObscured = true;
 
-  // String? _profileImageString;
-  // String? _identityImagePath;
-
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _dateOfBirthController = TextEditingController();
 
-  final Map<String, String> _texts = {
-    'title': 'Sign Up',
-    'firstName': 'First Name',
-    'lastName': 'Last Name',
-    'phone': 'Phone Number',
-    'password': 'Password',
-    'dob': 'Date of Birth',
-    'idImage': 'Identity Image',
-    'selectImage': 'Select Image',
-    'resetImage': 'Reset',
-    'signUp': 'Sign Up',
-    'haveAccount': 'Already have an account?',
-    'login': 'Login',
-    'required': 'This field is required',
-    'nameLengthError': 'Max 20 characters allowed',
-    'phoneRequired': 'Please enter phone number',
-    'phoneLengthError': 'Phone Number must be exactly 10 digits',
-    'passwordRequired': 'Please enter password',
-    'passwordLengthError': 'Password must be between 8 and 16 characters',
-    'profileRequired': 'Please select profile image.',
-    'idRequired': 'Please select identity image.',
-    'allRequired': 'Please fill all required fields',
-    'imageSelected': 'Image selected successfully',
-  };
+  Map<String, dynamic> get locale =>
+      context.read<LocaleCubit>().state.localizedStrings['singup'];
+  // late var locale = BlocProvider.of<LocaleCubit>(
+  //   context,
+  // ).state.localizedStrings['singup'];
+
   // LocaleState localeState = context.read<LocaleState>().localizedStrings;
   // @override
   // void dispose() {
@@ -130,29 +109,43 @@ class _SignUpScreenState extends State<SignUpScreen> {
           _idImageString = pickedFile.path;
         }
 
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text(_texts['imageSelected']!)));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              locale['imageSelected'] ?? 'Image selected successfully',
+            ),
+          ),
+        );
       });
     } else {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text("No image selected.")));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(locale["No image selected"] ?? "No image selected."),
+        ),
+      );
     }
   }
 
   void _handleSignUp() {
     if (_formKey.currentState?.validate() ?? false) {
       if (_profileImageString == null) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text(_texts['profileRequired']!)));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              locale['profileRequired'] ?? 'Please select profile image.',
+            ),
+          ),
+        );
         return;
       }
       if (_idImageString == null) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text(_texts['idRequired']!)));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              locale['idRequired'] ?? 'Please select identity image.',
+            ),
+          ),
+        );
         return;
       }
 
@@ -160,9 +153,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
         context,
       ).pushNamed(SuccessScreen.routeName, arguments: false);
     } else {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(_texts['allRequired']!)));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            locale['allRequired'] ?? 'Please fill all required fields',
+          ),
+        ),
+      );
     }
   }
 
@@ -185,7 +182,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
           children: [
             Expanded(
               child: Text(
-                isImageSelected ? 'Image Selected' : 'No image selected yet',
+                isImageSelected
+                    ? locale["Image Selected"] ?? 'Image Selected'
+                    : locale['No image selected'] ?? 'No image selected yet',
                 style: TextStyle(
                   color: isImageSelected
                       ? theme.primaryColor
@@ -203,7 +202,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             OutlinedButton.icon(
               onPressed: onSelect,
               icon: const Icon(Icons.file_upload_outlined, size: 18),
-              label: Text(_texts['selectImage']!),
+              label: Text(locale['selectImage'] ?? 'Select Image'),
               style: OutlinedButton.styleFrom(
                 foregroundColor: theme.primaryColor,
                 side: BorderSide(color: theme.primaryColor),
@@ -236,7 +235,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     vertical: 0,
                   ),
                 ),
-                child: Text(_texts['resetImage']!),
+                child: Text(locale['resetImage'] ?? 'Reset'),
               ),
           ],
         ),
@@ -276,7 +275,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              _texts['title']!,
+                              locale['title'] ?? 'Sign Up',
                               style: AppStyles.titleStyle.copyWith(
                                 color: theme.textTheme.titleLarge!.color,
                               ),
@@ -367,7 +366,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 });
                               },
                               child: Text(
-                                _texts['resetImage']!,
+                                locale['resetImage'] ?? 'Reset',
                                 style: TextStyle(
                                   color: theme.colorScheme.error,
                                 ),
@@ -382,7 +381,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             children: [
                               CustomTextField(
                                 controller: _firstNameController,
-                                hintText: _texts['firstName']!,
+                                hintText: locale['firstName'] ?? 'First Name',
                                 keyboardType: TextInputType.text,
                                 maxLength: 20,
                                 suffixIcon: Icon(
@@ -391,10 +390,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 ),
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
-                                    return _texts['required'];
+                                    return locale['required'] ??
+                                        'This field is required';
                                   }
                                   if (value.length > 20) {
-                                    return _texts['nameLengthError'];
+                                    return locale['nameLengthError'] ??
+                                        'Max 20 characters allowed';
                                   }
                                   return null;
                                 },
@@ -403,7 +404,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
                               CustomTextField(
                                 controller: _lastNameController,
-                                hintText: _texts['lastName']!,
+                                hintText: locale['lastName'] ?? 'Last Name',
                                 keyboardType: TextInputType.text,
                                 maxLength: 20,
                                 suffixIcon: Icon(
@@ -412,10 +413,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 ),
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
-                                    return _texts['required'];
+                                    return locale['required'] ??
+                                        'This field is required';
                                   }
                                   if (value.length > 20) {
-                                    return _texts['nameLengthError'];
+                                    return locale['nameLengthError'] ??
+                                        'Max 20 characters allowed';
                                   }
                                   return null;
                                 },
@@ -424,7 +427,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
                               CustomTextField(
                                 controller: _phoneController,
-                                hintText: _texts['phone']!,
+                                hintText: locale['phone'] ?? 'Phone Number',
                                 keyboardType: TextInputType.phone,
                                 maxLength: 10,
                                 suffixIcon: Icon(
@@ -433,10 +436,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 ),
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
-                                    return _texts['phoneRequired'];
+                                    return locale['phoneRequired'] ??
+                                        'Please enter phone number';
                                   }
                                   if (value.length != 10) {
-                                    return _texts['phoneLengthError'];
+                                    return locale['phoneLengthError'] ??
+                                        'Phone Number must be exactly 10 digits';
                                   }
                                   return null;
                                 },
@@ -445,15 +450,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
                               CustomTextField(
                                 controller: _passwordController,
-                                hintText: _texts['password']!,
+                                hintText: locale['password'] ?? 'Password',
                                 isPassword: _isPasswordObscured,
                                 maxLength: 16,
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
-                                    return _texts['passwordRequired'];
+                                    return locale['passwordRequired'] ??
+                                        'Please enter password';
                                   }
                                   if (value.length < 8 || value.length > 16) {
-                                    return _texts['passwordLengthError'];
+                                    return locale['passwordLengthError'] ??
+                                        'Password must be between 8 and 16 characters';
                                   }
                                   return null;
                                 },
@@ -475,14 +482,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               const SizedBox(height: AppSizes.paddingMedium),
                               CustomTextField(
                                 controller: _dateOfBirthController,
-                                hintText: _texts['dob']!,
+                                hintText: locale['dob'] ?? 'Date of Birth',
                                 maxLength: 16,
                                 keyboardType: TextInputType.datetime,
                                 readOnly: true,
                                 onTap: _selectDateOfBirth,
                                 validator: (value) =>
                                     (value == null || value.isEmpty)
-                                    ? _texts['required']
+                                    ? locale['required'] ??
+                                          'This field is required'
                                     : null,
                                 suffixIcon: Icon(
                                   Icons.calendar_today,
@@ -495,7 +503,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         ),
 
                         _buildImagePickerField(
-                          _texts['idImage']!,
+                          locale['idImage'] ?? 'Identity Image',
                           _idImage,
                           () {
                             setState(() {
@@ -513,7 +521,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         const SizedBox(height: AppSizes.paddingExtraLarge),
 
                         CustomPrimaryButton(
-                          text: _texts['signUp']!,
+                          text: locale['signUp'] ?? 'Sign Up',
                           onPressed: _handleSignUp,
                         ),
                         const SizedBox(height: AppSizes.paddingMedium),
@@ -522,7 +530,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              _texts['haveAccount']!,
+                              locale['haveAccount'] ??
+                                  'Already have an account?',
                               style: TextStyle(
                                 color: theme.colorScheme.onSurfaceVariant,
                               ),
@@ -535,7 +544,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 ).pushNamed(LoginScreen.routeName);
                               },
                               child: Text(
-                                _texts['login']!,
+                                locale['login'] ?? 'Login',
                                 style: TextStyle(
                                   color: theme.primaryColor,
                                   fontWeight: FontWeight.bold,

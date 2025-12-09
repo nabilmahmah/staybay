@@ -98,7 +98,8 @@ class WelcomeScreen extends StatelessWidget {
                       const SizedBox(height: AppSizes.paddingSmall),
 
                       Text(
-                        'Find your next space, Feel at home',
+                        state.localizedStrings['welcome']['des1'] ??
+                            'Find your next space, Feel at home',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: AppSizes.fontSizeLabel,
@@ -108,7 +109,8 @@ class WelcomeScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: AppSizes.paddingSmall / 2),
                       Text(
-                        'Where comfort meets convenience',
+                        state.localizedStrings['welcome']['des2'] ??
+                            'Where comfort meets convenience',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: AppSizes.fontSizeLabel,
@@ -119,7 +121,9 @@ class WelcomeScreen extends StatelessWidget {
                       const SizedBox(height: AppSizes.paddingExtraLarge),
 
                       CustomPrimaryButton(
-                        text: 'Login',
+                        text:
+                            state.localizedStrings['welcome']['login'] ??
+                            'Login',
                         onPressed: () => _navigateToLogin(context),
                       ),
 
@@ -144,7 +148,8 @@ class WelcomeScreen extends StatelessWidget {
                             elevation: 0,
                           ),
                           child: Text(
-                            'Sign Up',
+                            state.localizedStrings['welcome']['signup'] ??
+                                'Sign Up',
                             style: TextStyle(
                               color: theme.colorScheme.onSurface,
                               fontSize: AppSizes.fontSizeButton,
