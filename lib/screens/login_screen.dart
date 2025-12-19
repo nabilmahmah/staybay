@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:staybay/cubits/locale/locale_cubit.dart';
 import 'package:staybay/cubits/locale/locale_state.dart';
 import 'package:staybay/services/login_service.dart';
@@ -33,6 +34,12 @@ class _LoginScreenState extends State<LoginScreen> {
   //   super.dispose();
   // }
 
+  Future<void> saveToken(String token) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('token', token);
+    await prefs.setBool('isLoggedIn', true);
+  }
+
   void _handleLogin() async {
     if (_formKey.currentState?.validate() ?? false) {
       var response = await LoginService.logIn(
@@ -42,6 +49,7 @@ class _LoginScreenState extends State<LoginScreen> {
       );
 
       if (response != null && response.statusCode == 200) {
+        saveToken(response.data['data']['token']);
         Navigator.of(
           context,
         ).pushNamed(SuccessScreen.routeName, arguments: true);

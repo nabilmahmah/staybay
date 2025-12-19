@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:staybay/models/apartment_model.dart';
 import 'package:staybay/screens/account_screen.dart';
 import 'package:staybay/screens/add_apartment_screen.dart';
@@ -22,11 +23,14 @@ import 'screens/home_page_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const MyApp());
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  final bool islogin = prefs.getBool('isLoggedIn') ?? false;
+  runApp(MyApp(isLoggedIn: islogin));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final bool isLoggedIn;
+  const MyApp({super.key, required this.isLoggedIn});
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +70,10 @@ class MyApp extends StatelessWidget {
                         ? ThemeMode.dark
                         : ThemeMode.light,
                     // themeMode: ThemeMode.dark,
-                    initialRoute: WelcomeScreen.routeName,
+                    // initialRoute: WelcomeScreen.routeName,
+                    initialRoute: isLoggedIn
+                        ? HomePage.routeName
+                        : WelcomeScreen.routeName,
                     routes: {
                       WelcomeScreen.routeName: (context) =>
                           const WelcomeScreen(),
