@@ -54,24 +54,6 @@ class AppStyles {
     fontWeight: FontWeight.bold,
   );
 }
-
-/*
-class AppRoutes {
-  static const String routeName = '/welcome';
-  static const String login = '/login';
-  static const String signUp = '/signUp';
-  static const String success = '/success';
-  static const String homePage = '/homePage';
-  static const String myChat= '/my_chat';
-  static const String apartmentDetails = '/apartmentDetails';
-  static const String addApartment = '/addApartment';
-  static const String favorites = '/favorites';
-  static const String account = '/account';
-  static const String bookingDetails = '/bookingDetails';
-
-
-}
-*/
 class AppTheme {
   // Light Theme
   static ThemeData get lightTheme {
@@ -219,3 +201,4 @@ class AppTheme {
     );
   }
 }
+

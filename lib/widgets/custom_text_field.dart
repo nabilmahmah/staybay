@@ -12,6 +12,9 @@ class CustomTextField extends StatelessWidget {
   final VoidCallback? onTap;
   final int? maxLength;
   final bool showCounter;
+  final InputDecoration? decoration;
+  final TextStyle? textStyle; 
+
   const CustomTextField({
     super.key,
     required this.controller,
@@ -24,15 +27,26 @@ class CustomTextField extends StatelessWidget {
     this.onTap,
     this.maxLength,
     this.showCounter = false,
+    this.decoration,
+    this.textStyle,
   });
 
   @override
   Widget build(BuildContext context) {
+
     final theme = Theme.of(context);
-    final inputTextStyle = theme.textTheme.titleSmall?.copyWith(
+    final defaultInputTextStyle = theme.textTheme.titleMedium?.copyWith(
       color: theme.colorScheme.onSurface,
       fontWeight: FontWeight.w600,
     );
+    
+    final inputTextStyle = textStyle ?? defaultInputTextStyle;
+
+    final defaultDecoration = InputDecoration(
+      hintText: hintText,
+      suffixIcon: suffixIcon,
+    );
+
     return TextFormField(
       controller: controller,
       keyboardType: keyboardType,
@@ -44,16 +58,12 @@ class CustomTextField extends StatelessWidget {
       maxLengthEnforcement: MaxLengthEnforcement.enforced,
 
       style: inputTextStyle,
-
-      buildCounter: showCounter
-          ? null
-          : (
-              context, {
-              required currentLength,
-              required isFocused,
-              required maxLength,
-            }) => const SizedBox.shrink(),
-      decoration: InputDecoration(hintText: hintText, suffixIcon: suffixIcon),
+      
+      buildCounter: showCounter ? null : (context, 
+      {required currentLength, required isFocused, required maxLength}) 
+      => const SizedBox.shrink(),
+      
+      decoration: decoration ?? defaultDecoration,
     );
   }
 }

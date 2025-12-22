@@ -3,9 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:staybay/cubits/locale/locale_cubit.dart';
 import 'package:staybay/cubits/locale/locale_state.dart';
 import 'package:staybay/screens/welcome_screen.dart';
+import 'package:staybay/widgets/app_bottom_nav_bar.dart';
 import '../app_theme.dart';
 import '../widgets/custom_primary_button.dart';
-import 'home_page_screen.dart';
 
 class SuccessScreen extends StatelessWidget {
   static const String routeName = '/success';
@@ -83,7 +83,7 @@ class SuccessScreen extends StatelessWidget {
                     onPressed: () {
                       if (isLoginSuccess) {
                         Navigator.of(context).pushNamedAndRemoveUntil(
-                          HomePage.routeName,
+                          AppBottomNavBar.routeName,
                           (Route<dynamic> route) => false,
                         );
                       } else {

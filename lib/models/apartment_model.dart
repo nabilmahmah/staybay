@@ -13,6 +13,7 @@ class Apartment {
   final List<String> amenities;
   final String description;
   final List<String> imagesPaths;
+  bool isFavorite;
 
   Apartment({
     required this.id,
@@ -29,5 +30,6 @@ class Apartment {
     required this.amenities,
     required this.description,
     required this.imagesPaths,
+    this.isFavorite = false,
   });
 }

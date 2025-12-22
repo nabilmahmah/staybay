@@ -10,7 +10,7 @@ class ApartmentService {
     });
   }
 
-  static final List<Apartment> _mockApartments = [
+  static List<Apartment> mockApartments = [
     Apartment(
       id: 'a1',
       title:'Luxury apartment in Damascus',
@@ -111,7 +111,7 @@ class ApartmentService {
 
   Future<List<Apartment>> fetchAllApartments() async {
     await Future.delayed(const Duration(milliseconds: 500));
-    return _mockApartments;
+    return mockApartments;
   }
 }
 

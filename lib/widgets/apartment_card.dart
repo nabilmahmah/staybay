@@ -31,11 +31,11 @@ class ApartmentCard extends StatelessWidget {
     final theme = Theme.of(context);
 
     return InkWell(
-      onTap: () {
-        
-        Navigator.of(context).pushNamed(
-          ApartmentDetailsScreen.routeName,
-          arguments: apartment,
+      onTap: () {   
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => ApartmentDetailsScreen(apartment: apartment),
+          ),
         );
       },
       borderRadius: BorderRadius.circular(AppSizes.borderRadiusLarge),

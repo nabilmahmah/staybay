@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:staybay/models/apartment_model.dart';
+import 'package:staybay/services/apartment_service.dart';
 import '../app_theme.dart';
 import '../widgets/details_image_carousel.dart';
 import '../widgets/custom_primary_button.dart';
@@ -19,10 +20,20 @@ class ApartmentDetailsScreen extends StatefulWidget {
 }
 
 class _ApartmentDetailsScreenState extends State<ApartmentDetailsScreen> {
-  bool _isFavorite = false;
+  late bool _isFavorite;
 
-  Widget _buildFeatureIcon(BuildContext context,
-      {required IconData icon, required String label, required String value}) {
+  @override
+  void initState() {
+    super.initState();
+    _isFavorite = widget.apartment.isFavorite;
+  }
+
+  Widget _buildFeatureIcon(
+    BuildContext context, {
+    required IconData icon,
+    required String label,
+    required String value,
+  }) {
     final theme = Theme.of(context);
     return Column(
       children: [
@@ -30,12 +41,15 @@ class _ApartmentDetailsScreenState extends State<ApartmentDetailsScreen> {
         const SizedBox(height: AppSizes.paddingSmall / 2),
         Text(
           value,
-          style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+          style: theme.textTheme.titleMedium?.copyWith(
+            fontWeight: FontWeight.bold,
+          ),
         ),
         Text(
           label,
-          style: theme.textTheme.bodySmall
-              ?.copyWith(color: AppColors.secondaryText),
+          style: theme.textTheme.bodySmall?.copyWith(
+            color: AppColors.secondaryText,
+          ),
         ),
       ],
     );
@@ -52,21 +66,23 @@ class _ApartmentDetailsScreenState extends State<ApartmentDetailsScreen> {
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-            content: Text('Thank you! You gave a rating of $result stars.')),
+          content: Text('Thank you! You gave a rating of $result stars.'),
+        ),
       );
     }
   }
 
-  void _navigateToBooking(BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const BookingDetailsScreen(),
-        settings: RouteSettings(arguments: widget.apartment),
+void _navigateToBooking(BuildContext context) {
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (_) => BookingDetailsScreen(
+        apartment: widget.apartment,
       ),
-    );
-  }
-
+    ),
+  );
+}
+  
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -84,7 +100,7 @@ class _ApartmentDetailsScreenState extends State<ApartmentDetailsScreen> {
               backgroundColor: theme.colorScheme.primary,
               leading: IconButton(
                 icon: const Icon(Icons.arrow_back, color: Colors.white),
-                onPressed: () => Navigator.pop(context),
+                onPressed: () => Navigator.of(context).pop(),
               ),
               actions: [
                 IconButton(
@@ -94,14 +110,18 @@ class _ApartmentDetailsScreenState extends State<ApartmentDetailsScreen> {
                   ),
                   onPressed: () {
                     setState(() {
+                      final index = ApartmentService.mockApartments.indexWhere(
+                        (apt) => apt.id == apartmentDetails.id);
+                      ApartmentService.mockApartments[index].isFavorite = !_isFavorite;
                       _isFavorite = !_isFavorite;
                     });
                   },
-                ),
+               ),
               ],
               flexibleSpace: FlexibleSpaceBar(
                 background: DetailsImageCarousel(
-                    imagesPaths: apartmentDetails.imagesPaths),
+                  imagesPaths: apartmentDetails.imagesPaths,
+                ),
               ),
             ),
           ];
@@ -115,7 +135,7 @@ class _ApartmentDetailsScreenState extends State<ApartmentDetailsScreen> {
                 apartmentDetails.title,
                 style: AppStyles.titleStyle.copyWith(
                   color: theme.colorScheme.onSurface,
-                  ),
+                ),
               ),
               const SizedBox(height: AppSizes.paddingSmall),
               Row(
@@ -123,8 +143,11 @@ class _ApartmentDetailsScreenState extends State<ApartmentDetailsScreen> {
                 children: [
                   Row(
                     children: [
-                      Icon(Icons.location_on,
-                          size: 18, color: theme.colorScheme.onSurfaceVariant),
+                      Icon(
+                        Icons.location_on,
+                        size: 18,
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
                       const SizedBox(width: AppSizes.paddingSmall / 2),
                       Text(
                         apartmentDetails.location,
@@ -162,19 +185,25 @@ class _ApartmentDetailsScreenState extends State<ApartmentDetailsScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  _buildFeatureIcon(context,
-                      icon: Icons.king_bed,
-                      label: 'Bedrooms',
-                      value: '${apartmentDetails.beds}'),
-                  _buildFeatureIcon(context,
-                      icon: Icons.bathtub,
-                      label: 'Bathrooms',
-                      value: '${apartmentDetails.baths}'),
-                  _buildFeatureIcon(context,
-                      icon: Icons.square_foot,
-                      label: 'Area',
-                      value:
-                          '${apartmentDetails.areaSqft.toStringAsFixed(0)} Sqft'),
+                  _buildFeatureIcon(
+                    context,
+                    icon: Icons.king_bed,
+                    label: 'Bedrooms',
+                    value: '${apartmentDetails.beds}',
+                  ),
+                  _buildFeatureIcon(
+                    context,
+                    icon: Icons.bathtub,
+                    label: 'Bathrooms',
+                    value: '${apartmentDetails.baths}',
+                  ),
+                  _buildFeatureIcon(
+                    context,
+                    icon: Icons.square_foot,
+                    label: 'Area',
+                    value:
+                        '${apartmentDetails.areaSqft.toStringAsFixed(0)} Sqft',
+                  ),
                 ],
               ),
               const Divider(height: AppSizes.paddingLarge * 2),
@@ -183,14 +212,18 @@ class _ApartmentDetailsScreenState extends State<ApartmentDetailsScreen> {
                 children: [
                   Row(
                     children: [
-                      Icon(Icons.person_2_rounded,
-                          size: 24, color: theme.colorScheme.primary),
+                      Icon(
+                        Icons.person_2_rounded,
+                        size: 24,
+                        color: theme.colorScheme.primary,
+                      ),
                       const SizedBox(width: AppSizes.paddingMedium),
                       Expanded(
                         child: Text(
                           'Owner: ${apartmentDetails.ownerName}',
-                          style: theme.textTheme.titleLarge
-                              ?.copyWith(fontWeight: FontWeight.w600),
+                          style: theme.textTheme.titleLarge?.copyWith(
+                            fontWeight: FontWeight.w600,
+                          ),
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
@@ -199,11 +232,13 @@ class _ApartmentDetailsScreenState extends State<ApartmentDetailsScreen> {
                   const SizedBox(height: AppSizes.paddingSmall),
                   InkWell(
                     onTap: () => _showRatingDialog(context),
-                    borderRadius:
-                    BorderRadius.circular(AppSizes.borderRadiusLarge),
+                    borderRadius: BorderRadius.circular(
+                      AppSizes.borderRadiusLarge,
+                    ),
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: AppSizes.paddingSmall),
+                        horizontal: AppSizes.paddingSmall,
+                      ),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -219,8 +254,9 @@ class _ApartmentDetailsScreenState extends State<ApartmentDetailsScreen> {
                           const SizedBox(width: AppSizes.paddingSmall),
                           Text(
                             '(${apartmentDetails.reviewsCount} Reviews)',
-                            style: theme.textTheme.bodyMedium
-                                ?.copyWith(color: AppColors.secondaryText),
+                            style: theme.textTheme.bodyMedium?.copyWith(
+                              color: AppColors.secondaryText,
+                            ),
                           ),
                         ],
                       ),
@@ -233,8 +269,9 @@ class _ApartmentDetailsScreenState extends State<ApartmentDetailsScreen> {
 
               Text(
                 'Amenities & Services',
-                style: theme.textTheme.titleLarge
-                    ?.copyWith(fontWeight: FontWeight.bold),
+                style: theme.textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               const SizedBox(height: AppSizes.paddingMedium),
               AmenitiesResponsiveGrid(amenities: apartmentDetails.amenities),
@@ -242,8 +279,9 @@ class _ApartmentDetailsScreenState extends State<ApartmentDetailsScreen> {
 
               Text(
                 'Description',
-                style: theme.textTheme.titleLarge
-                    ?.copyWith(fontWeight: FontWeight.bold),
+                style: theme.textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               const SizedBox(height: AppSizes.paddingMedium),
               Text(
