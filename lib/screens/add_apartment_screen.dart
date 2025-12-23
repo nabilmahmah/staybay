@@ -9,7 +9,8 @@ import '../services/apartment_service.dart';
 class AddApartmentScreen extends StatefulWidget {
   static const String routeName = '/add';
 
-  const AddApartmentScreen({super.key});
+  final Apartment? apartmentToEdit;
+  const AddApartmentScreen({super.key, this.apartmentToEdit});
 
   @override
   State<AddApartmentScreen> createState() => _AddApartmentScreenState();
@@ -27,12 +28,44 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
   final _areaController = TextEditingController();
   final _descriptionController = TextEditingController();
 
+  /// ===== AMENITIES =====
+  final List<String> _allAmenities = [
+    'wifi',
+    'pool',
+    'parking',
+    'gym',
+    'balcony',
+    'heating',
+    'garden',
+    'bbq area',
+    'fireplace',
+    'mountain view',
+    'pets allowed',
+  ];
+
+  List<String> _selectedAmenities = [];
+
   /// ===== IMAGES =====
   final ImagePicker _imagePicker = ImagePicker();
   final List<XFile> _pickedImages = [];
-
-  /// Web image cache
   final Map<String, Uint8List> _webImageBytes = {};
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (widget.apartmentToEdit != null) {
+      final a = widget.apartmentToEdit!;
+      _titleController.text = a.title;
+      _locationController.text = a.location;
+      _priceController.text = a.pricePerNight.toString();
+      _bedsController.text = a.beds.toString();
+      _bathsController.text = a.baths.toString();
+      _areaController.text = a.areaSqft.toString();
+      _descriptionController.text = a.description;
+      _selectedAmenities = List.from(a.amenities);
+    }
+  }
 
   @override
   void dispose() {
@@ -46,37 +79,48 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
     super.dispose();
   }
 
+  /// ===== AMENITY ICON =====
+  IconData _getAmenityIcon(String amenity) {
+    switch (amenity.toLowerCase()) {
+      case 'wifi':
+        return Icons.wifi;
+      case 'pool':
+        return Icons.pool;
+      case 'parking':
+        return Icons.local_parking;
+      case 'gym':
+        return Icons.fitness_center;
+      case 'balcony':
+        return Icons.balcony;
+      case 'heating':
+        return Icons.fireplace;
+      case 'garden':
+        return Icons.yard;
+      case 'bbq area':
+        return Icons.outdoor_grill;
+      case 'fireplace':
+        return Icons.fireplace;
+      case 'mountain view':
+        return Icons.terrain;
+      case 'pets allowed':
+        return Icons.pets;
+      default:
+        return Icons.check_circle_outline;
+    }
+  }
+
   /// ===== IMAGE PICKER =====
   Future<void> _pickImages() async {
-    try {
-      final images = await _imagePicker.pickMultiImage(imageQuality: 85);
-      if (images == null || images.isEmpty) return;
+    final images = await _imagePicker.pickMultiImage(imageQuality: 85);
+    if (images.isEmpty) return;
 
-      if (kIsWeb) {
-        for (final img in images) {
-          _webImageBytes[img.name] = await img.readAsBytes();
-        }
+    if (kIsWeb) {
+      for (final img in images) {
+        _webImageBytes[img.name] = await img.readAsBytes();
       }
-
-      setState(() {
-        _pickedImages.addAll(images);
-      });
-    } catch (_) {
-      final image = await _imagePicker.pickImage(
-        source: ImageSource.gallery,
-        imageQuality: 85,
-      );
-
-      if (image == null) return;
-
-      if (kIsWeb) {
-        _webImageBytes[image.name] = await image.readAsBytes();
-      }
-
-      setState(() {
-        _pickedImages.add(image);
-      });
     }
+
+    setState(() => _pickedImages.addAll(images));
   }
 
   void _removeImageAt(int index) {
@@ -85,75 +129,6 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
     setState(() {});
   }
 
-  /// ===== SAVE =====
-  void _saveApartment() {
-    if (!_formKey.currentState!.validate()) return;
-
-    double parseDouble(String v) =>
-        double.tryParse(v.replaceAll(',', '.')) ?? 0.0;
-    int parseInt(String v) => int.tryParse(v) ?? 0;
-
-    final imagePaths = kIsWeb
-        ? _pickedImages.map((e) => e.name).toList()
-        : _pickedImages.map((e) => e.path).toList();
-
-    final apartment = Apartment(
-      id: DateTime.now().millisecondsSinceEpoch.toString(),
-      title: _titleController.text.trim(),
-      location: _locationController.text.trim(),
-      pricePerNight: parseDouble(_priceController.text),
-      imagePath: imagePaths.isNotEmpty ? imagePaths.first : '',
-      rating: 0.0,
-      reviewsCount: 0,
-      beds: parseInt(_bedsController.text),
-      baths: parseInt(_bathsController.text),
-      areaSqft: parseDouble(_areaController.text),
-      ownerName: '',
-      amenities: const [],
-      description: _descriptionController.text.trim(),
-      imagesPaths: imagePaths,
-    );
-
-    ApartmentService.mockApartments.add(apartment);
-
-    Navigator.of(context).pushNamedAndRemoveUntil(
-      AppBottomNavBar.routeName,
-      (_) => false,
-    );
-  }
-
-  /// ===== UI HELPERS =====
-  InputDecoration _inputDecoration(String label, IconData icon) {
-    return InputDecoration(
-      labelText: label,
-      prefixIcon: Icon(icon),
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
-    );
-  }
-
-  Widget _textField(
-    TextEditingController controller,
-    String label,
-    IconData icon, {
-    TextInputType keyboardType = TextInputType.text,
-    int maxLines = 1,
-  }) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 14),
-      child: TextFormField(
-        controller: controller,
-        keyboardType: keyboardType,
-        maxLines: maxLines,
-        validator: (v) =>
-            (v == null || v.trim().isEmpty) ? 'Required' : null,
-        decoration: _inputDecoration(label, icon),
-      ),
-    );
-  }
-
-  /// ===== IMAGE PREVIEW =====
   Widget _imagesPreview() {
     if (_pickedImages.isEmpty) {
       return GestureDetector(
@@ -163,13 +138,12 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12),
             border: Border.all(color: Colors.grey.shade300),
-            color: Colors.grey.shade50,
           ),
           child: const Center(
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(Icons.photo_library_outlined, size: 28),
+                Icon(Icons.photo_library_outlined),
                 SizedBox(height: 6),
                 Text('Add images'),
               ],
@@ -214,10 +188,7 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
                           _webImageBytes[image.name]!,
                           fit: BoxFit.cover,
                         )
-                      : Image.file(
-                          File(image.path),
-                          fit: BoxFit.cover,
-                        ),
+                      : Image.file(File(image.path), fit: BoxFit.cover),
                 ),
               ),
               Positioned(
@@ -239,131 +210,163 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
     );
   }
 
-  /// ===== BUILD =====
+  /// ===== SAVE =====
+  void _saveApartment() {
+    if (!_formKey.currentState!.validate()) return;
+
+    double d(String v) => double.tryParse(v) ?? 0;
+    int i(String v) => int.tryParse(v) ?? 0;
+
+    final imagePaths = kIsWeb
+        ? _pickedImages.map((e) => e.name).toList()
+        : _pickedImages.map((e) => e.path).toList();
+
+    final apartment = Apartment(
+      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      title: _titleController.text.trim(),
+      location: _locationController.text.trim(),
+      pricePerNight: d(_priceController.text),
+      imagePath: imagePaths.isNotEmpty ? imagePaths.first : '',
+      rating: 0,
+      reviewsCount: 0,
+      beds: i(_bedsController.text),
+      baths: i(_bathsController.text),
+      areaSqft: d(_areaController.text),
+      ownerName: '',
+      amenities: _selectedAmenities,
+      description: _descriptionController.text.trim(),
+      imagesPaths: imagePaths,
+    );
+
+    ApartmentService.mockApartments.add(apartment);
+
+    Navigator.of(context)
+        .pushNamedAndRemoveUntil(AppBottomNavBar.routeName, (_) => false);
+  }
+
+  /// ===== AMENITIES UI =====
+  Widget _amenitiesSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Amenities',
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 8),
+        ..._allAmenities.map((amenity) {
+          return CheckboxListTile(
+            value: _selectedAmenities.contains(amenity),
+            controlAffinity: ListTileControlAffinity.leading,
+            title: Row(
+              children: [
+                Icon(_getAmenityIcon(amenity), size: 20),
+                const SizedBox(width: 8),
+                Text(amenity),
+              ],
+            ),
+            onChanged: (value) {
+              setState(() {
+                value == true
+                    ? _selectedAmenities.add(amenity)
+                    : _selectedAmenities.remove(amenity);
+              });
+            },
+          );
+        }),
+      ],
+    );
+  }
+
+  InputDecoration _dec(String label, IconData icon) {
+    return InputDecoration(
+      labelText: label,
+      prefixIcon: Icon(icon),
+      border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+    );
+  }
+
+  Widget _field(
+    TextEditingController c,
+    String l,
+    IconData i, {
+    TextInputType t = TextInputType.text,
+    int m = 1,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 14),
+      child: TextFormField(
+        controller: c,
+        keyboardType: t,
+        maxLines: m,
+        validator: (v) => v == null || v.isEmpty ? 'Required' : null,
+        decoration: _dec(l, i),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Add New Apartment'),
-        centerTitle: true,
-      ),
+      appBar: AppBar(title: const Text('Add Apartment')),
       body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
         child: Form(
           key: _formKey,
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              /// ===== FULL WIDTH HEADER =====
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  color: theme.colorScheme.primary.withOpacity(0.08),
-                  borderRadius: const BorderRadius.only(
-                    bottomLeft: Radius.circular(22),
-                    bottomRight: Radius.circular(22),
-                  ),
-                ),
-                child: const Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Create a New Listing',
-                      style: TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(height: 6),
-                    Text(
-                      'Fill the details below to add your apartment',
-                      style: TextStyle(color: Colors.grey),
-                    ),
-                  ],
-                ),
+              _imagesPreview(),
+              const SizedBox(height: 16),
+              _field(_titleController, 'Title', Icons.home),
+              _field(_locationController, 'Location', Icons.location_on),
+              _field(
+                _priceController,
+                'Price per night',
+                Icons.attach_money,
+                t: TextInputType.number,
               ),
-
-              const SizedBox(height: 18),
-
-              /// ===== FORM CONTENT =====
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Column(
-                  children: [
-                    _imagesPreview(),
-                    const SizedBox(height: 14),
-
-                    _textField(
-                        _titleController, 'Apartment Title', Icons.home),
-                    _textField(_locationController, 'Location',
-                        Icons.location_on),
-                    _textField(
-                      _priceController,
-                      'Price per Night',
-                      Icons.attach_money,
-                      keyboardType: const TextInputType.numberWithOptions(
-                        decimal: true,
-                      ),
+              Row(
+                children: [
+                  Expanded(
+                    child: _field(
+                      _bedsController,
+                      'Beds',
+                      Icons.bed,
+                      t: TextInputType.number,
                     ),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: _textField(
-                            _bedsController,
-                            'Beds',
-                            Icons.bed,
-                            keyboardType: TextInputType.number,
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: _textField(
-                            _bathsController,
-                            'Baths',
-                            Icons.bathtub,
-                            keyboardType: TextInputType.number,
-                          ),
-                        ),
-                      ],
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: _field(
+                      _bathsController,
+                      'Baths',
+                      Icons.bathtub,
+                      t: TextInputType.number,
                     ),
-                    _textField(
-                      _areaController,
-                      'Area (sqft)',
-                      Icons.square_foot,
-                      keyboardType:
-                          const TextInputType.numberWithOptions(decimal: true),
-                    ),
-                    _textField(
-                      _descriptionController,
-                      'Description',
-                      Icons.description,
-                      maxLines: 4,
-                    ),
-
-                    const SizedBox(height: 24),
-
-                    SizedBox(
-                      width: double.infinity,
-                      height: 50,
-                      child: ElevatedButton(
-                        onPressed: _saveApartment,
-                        style: ElevatedButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
-                        child: const Text(
-                          'Save Apartment',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
+                  ),
+                ],
+              ),
+              _field(
+                _areaController,
+                'Area',
+                Icons.square_foot,
+                t: TextInputType.number,
+              ),
+              _field(
+                _descriptionController,
+                'Description',
+                Icons.description,
+                m: 3,
+              ),
+              const SizedBox(height: 16),
+              _amenitiesSection(),
+              const SizedBox(height: 24),
+              SizedBox(
+                width: double.infinity,
+                height: 50,
+                child: ElevatedButton(
+                  onPressed: _saveApartment,
+                  child: const Text('Save Apartment'),
                 ),
               ),
             ],

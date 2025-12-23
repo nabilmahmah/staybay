@@ -39,9 +39,8 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
       firstDate: DateTime(2020),
       lastDate: DateTime(2100),
     );
-
+    
     if (picked == null) return;
-
     setState(() {
       isCheckIn ? _checkIn = picked : _checkOut = picked;
     });

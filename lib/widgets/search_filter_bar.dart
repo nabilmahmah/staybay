@@ -183,24 +183,41 @@ class SearchFiltersWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 52,
-      child: ListView(
-        scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(horizontal: 12),
-        children: [
-          _chip(context, 'Location', Icons.location_on,
-              () => _locationSheet(context)),
-          _chip(context, 'Beds', Icons.bed,
-              () => _numberSheet(context, 'Beds')),
-          _chip(context, 'Baths', Icons.bathtub,
-              () => _numberSheet(context, 'Baths')),
-          _chip(context, 'Area', Icons.square_foot,
-              () => _areaSheet(context)),
-          _chip(context, 'Price', Icons.attach_money,
-              () => _priceSheet(context)),
-        ],
-      ),
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: TextFormField(
+            controller: TextEditingController(),
+            decoration: InputDecoration(
+              hintText: 'Search...',
+              prefixIcon: Icon(Icons.search),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(15),
+              ),
+            ),
+          ),
+        ),
+        SizedBox(
+          height: 52,
+          child: ListView(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            children: [
+              _chip(context, 'Location', Icons.location_on,
+                  () => _locationSheet(context)),
+              _chip(context, 'Beds', Icons.bed,
+                  () => _numberSheet(context, 'Beds')),
+              _chip(context, 'Baths', Icons.bathtub,
+                  () => _numberSheet(context, 'Baths')),
+              _chip(context, 'Area', Icons.square_foot,
+                  () => _areaSheet(context)),
+              _chip(context, 'Price', Icons.attach_money,
+                  () => _priceSheet(context)),
+            ],
+          ),
+        ),
+      ],
     );
   }
 

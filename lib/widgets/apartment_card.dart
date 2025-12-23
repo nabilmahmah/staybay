@@ -6,8 +6,8 @@ import '../screens/apartment_details_screen.dart';
 
 class ApartmentCard extends StatelessWidget {
   final Apartment apartment;
-
-  const ApartmentCard({super.key, required this.apartment});
+  VoidCallback? onTap;
+   ApartmentCard({super.key, required this.apartment, this.onTap});
 
   Widget _buildDetailItem(BuildContext context, {required IconData icon, required String value}) {
     final theme = Theme.of(context);
@@ -31,7 +31,8 @@ class ApartmentCard extends StatelessWidget {
     final theme = Theme.of(context);
 
     return InkWell(
-      onTap: () {   
+      onTap: onTap ??
+      ()  {   
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => ApartmentDetailsScreen(apartment: apartment),

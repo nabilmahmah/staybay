@@ -4,8 +4,8 @@ class Apartment {
   final String location;
   final double pricePerNight;
   final String imagePath;
-  final double rating;
-  final int reviewsCount;
+  double rating;
+  int reviewsCount;
   final int beds;
   final int baths;
   final double areaSqft;
@@ -26,10 +26,14 @@ class Apartment {
     required this.beds,
     required this.baths,
     required this.areaSqft,
-    required this.ownerName, 
+    required this.ownerName,
     required this.amenities,
     required this.description,
     required this.imagesPaths,
     this.isFavorite = false,
   });
+
+  get price => null;
+
+  get area => null;
 }

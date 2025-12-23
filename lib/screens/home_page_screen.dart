@@ -58,7 +58,6 @@ class _HomePageState extends State<HomePage> {
             onAreaSelected: (min, max) {},
             onPriceSelected: (min, max) {},
           ),
-
           //   SearchFiltersWidget(),
           Expanded(
             child: _isLoading

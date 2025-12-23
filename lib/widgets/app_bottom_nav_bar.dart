@@ -21,11 +21,11 @@ class AppBottomNavBar extends StatefulWidget {
 class _AppBottomNavBarState extends State<AppBottomNavBar> {
   int _currentIndex = 0;
 
-  final List<Widget> _pages = const [
-    HomePage(),
+  final List<Widget> _pages = [
+    const HomePage(),
     AddApartmentScreen(),
-    FavoritesScreen(),
-    AccountScreen(),
+    const FavoritesScreen(),
+    const AccountScreen(),
   ];
 
   @override
