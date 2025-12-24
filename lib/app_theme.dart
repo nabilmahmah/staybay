@@ -11,7 +11,7 @@ class AppColors {
 
   // Dark
   static const Color darkPrimaryBlue = Color(0xFF6366F1);
-  static const Color darkBackground = Color(0xFF121212);
+  static const Color darkBackground = Color.fromARGB(255, 32, 32, 32);
   static const Color darkSurface = Color(0xFF1E1E1E);
   static const Color darkOutlineColor = Color(0xFF424242);
   static const Color darkSecondaryText = Color(0xFFAAAAAA);
@@ -54,21 +54,18 @@ class AppStyles {
     fontWeight: FontWeight.bold,
   );
 }
-<<<<<<< HEAD
-=======
 
->>>>>>> 9473d48d8b197490307bbf8f31dd53d47abc0e48
 class AppTheme {
   // Light Theme
   static ThemeData get lightTheme {
     return ThemeData(
+      shadowColor: Colors.grey,
       primaryColor: AppColors.primaryBlue,
       scaffoldBackgroundColor: AppColors.backgroundColor,
       colorScheme: const ColorScheme.light(
         primary: AppColors.primaryBlue,
         secondary: AppColors.primaryBlue,
         error: AppColors.errorRed,
-
         surface: AppColors.backgroundColor,
       ),
       appBarTheme: const AppBarTheme(
@@ -206,4 +203,3 @@ class AppTheme {
     );
   }
 }
-

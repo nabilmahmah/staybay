@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:staybay/consetans.dart';
+import 'package:staybay/screens/my_apartments_screen.dart';
 
 import 'app_theme.dart';
 import 'cubits/locale/locale_cubit.dart';
@@ -22,7 +24,7 @@ import 'widgets/app_bottom_nav_bar.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final SharedPreferences prefs = await SharedPreferences.getInstance();
-  final bool islogin = prefs.getBool('isLoggedIn') ?? false;
+  final bool islogin = prefs.getBool(kIsLoggedIn) ?? false;
   if (islogin) {
     AppBottomNavBar.routeName = '/';
   } else {
@@ -48,9 +50,7 @@ class MyApp extends StatelessWidget {
         builder: (context, snapshot) {
           if (snapshot.connectionState != ConnectionState.done) {
             return const MaterialApp(
-              home: Scaffold(
-                body: Center(child: CircularProgressIndicator()),
-              ),
+              home: Scaffold(body: Center(child: CircularProgressIndicator())),
             );
           }
 
@@ -69,7 +69,7 @@ class MyApp extends StatelessWidget {
                     themeMode: themeState is DarkModeState
                         ? ThemeMode.dark
                         : ThemeMode.light,
-                    initialRoute: AppBottomNavBar.routeName,
+                    initialRoute: AccountScreen.routeName,
                     routes: _buildAppRoutes(),
                   );
                 },
@@ -83,7 +83,7 @@ class MyApp extends StatelessWidget {
 
   /// Returns a map of all application routes
   Map<String, WidgetBuilder> _buildAppRoutes() {
-    return {  
+    return {
       WelcomeScreen.routeName: (context) => const WelcomeScreen(),
       LoginScreen.routeName: (context) => const LoginScreen(),
       SignUpScreen.routeName: (context) => const SignUpScreen(),
@@ -94,12 +94,12 @@ class MyApp extends StatelessWidget {
             ModalRoute.of(context)?.settings.arguments as bool? ?? true;
         return SuccessScreen(isLoginSuccess: isLogin);
       },
-      AddApartmentScreen.routeName: (context) =>  AddApartmentScreen(),
+      AddApartmentScreen.routeName: (context) => AddApartmentScreen(),
       FavoritesScreen.routeName: (context) => const FavoritesScreen(),
       AccountScreen.routeName: (context) => const AccountScreen(),
       BookingsScreen.routeName: (context) => const BookingsScreen(),
       BookingDetailsScreen.routeName: (context) => BookingsScreen(),
-      MyApartmentsScreen.routeName: (context) =>  MyApartmentsScreen(),
+      MyApartmentsScreen.routeName: (context) => MyApartmentsScreen(),
     };
   }
 }

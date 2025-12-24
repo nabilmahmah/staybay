@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:staybay/consetans.dart';
 import 'package:staybay/cubits/locale/locale_cubit.dart';
 import 'package:staybay/cubits/locale/locale_state.dart';
 import 'package:staybay/services/login_service.dart';
@@ -26,7 +27,7 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _isPasswordVisible = false;
 
   Map<String, dynamic> get locale =>
-  context.read<LocaleCubit>().state.localizedStrings['login'];
+      context.read<LocaleCubit>().state.localizedStrings['login'];
   @override
   void dispose() {
     _phoneController.dispose();
@@ -36,8 +37,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future<void> saveToken(String token) async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('token', token);
-    await prefs.setBool('isLoggedIn', true);
+    await prefs.setString(kToken, token);
+    await prefs.setBool(kIsLoggedIn, true);
   }
 
   void _handleLogin() async {

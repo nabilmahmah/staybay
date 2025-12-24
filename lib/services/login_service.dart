@@ -2,14 +2,15 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:staybay/consetans.dart';
 
 class LoginService {
   static Future<Response?> logIn(context, String phone, String password) async {
     final Dio dio = Dio();
-    final String baseUrl = 'http://10.0.2.2:8000/api';
+
     final String login = '/user/login';
 
-    dio.options.baseUrl = baseUrl;
+    dio.options.baseUrl = kBaseUrl;
     try {
       final response = await dio.post(
         login,

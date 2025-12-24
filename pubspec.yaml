@@ -39,10 +39,7 @@ dependencies:
   flutter_rating_bar: ^4.0.1
   image_picker: ^1.2.1
   dio: ^5.9.0
-<<<<<<< HEAD
   shared_preferences: ^2.5.4
-=======
->>>>>>> mulham_done
 
 dev_dependencies:
   flutter_test:
