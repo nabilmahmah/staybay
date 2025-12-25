@@ -17,37 +17,38 @@ class BookedCard extends StatefulWidget {
 }
 
 class _BookedCardState extends State<BookedCard> {
+  //!!!!!! this is so fucking bullshit
   /// ===== Widget for rating stars =====
-  Widget _ratingStars() {
-    return Row(
-      children: List.generate(5, (index) {
-        final starIndex = index + 1;
-        return IconButton(
-          padding: EdgeInsets.zero,
-          constraints: const BoxConstraints(),
-          icon: Icon(
-            starIndex <= widget.apartment.rating.round()
-                ? Icons.star
-                : Icons.star_border,
-            color: Colors.amber,
-            size: 22,
-          ),
-          onPressed: () {
-            setState(() {
-              // تحديث متوسط التقييم  
-              final totalRating =
-                  widget.apartment.rating * widget.apartment.reviewsCount;
+  // Widget _ratingStars() {
+  // return Row(
+  //   children: List.generate(5, (index) {
+  //     final starIndex = index + 1;
+  //     return IconButton(
+  //       padding: EdgeInsets.zero,
+  //       constraints: const BoxConstraints(),
+  //       icon: Icon(
+  //         starIndex <= widget.apartment.rating.
+  //             ? Icons.star
+  //             : Icons.star_border,
+  //         color: Colors.amber,
+  //         size: 22,
+  //       ),
+  //       onPressed: () {
+  //         setState(() {
+  //           // // تحديث متوسط التقييم
+  //           // final totalRating =
+  //           //     widget.apartment.rating * widget.apartment.reviewsCount;
 
-              widget.apartment.reviewsCount += 1;
-              widget.apartment.rating =
-                  (totalRating + starIndex) /
-                  widget.apartment.reviewsCount;
-            });
-          },
-        );
-      }),
-    );
-  }
+  //           // widget.apartment.reviewsCount += 1;
+  //           // widget.apartment.rating =
+  //           //     (totalRating + starIndex) /
+  //           //     widget.apartment.reviewsCount;
+  //         });
+  //       },
+  //     );
+  //   }),
+  // );
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -62,17 +63,16 @@ class _BookedCardState extends State<BookedCard> {
       },
       child: Card(
         margin: const EdgeInsets.only(bottom: 12),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Stack(
               children: [
                 ClipRRect(
-                  borderRadius:
-                      const BorderRadius.vertical(top: Radius.circular(12)),
+                  borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(12),
+                  ),
                   child: Image.asset(
                     widget.apartment.imagePath,
                     height: 160,
@@ -110,16 +110,16 @@ class _BookedCardState extends State<BookedCard> {
                     style: const TextStyle(color: Colors.grey),
                   ),
                   const SizedBox(height: 8),
-                  Text(
-                    '\$${widget.apartment.pricePerNight.toStringAsFixed(0)} / night',
-                    style: const TextStyle(fontWeight: FontWeight.w600),
-                  ),
+                  // Text(
+                  //   '\$${widget.apartment.pricePerNight.toStringAsFixed(0)} / night',
+                  //   style: const TextStyle(fontWeight: FontWeight.w600),
+                  // ),
                   const SizedBox(height: 8),
-                  _ratingStars(),
-                  Text(
-                    '${widget.apartment.rating.toStringAsFixed(1)} (${widget.apartment.reviewsCount} reviews)',
-                    style: const TextStyle(fontSize: 12, color: Colors.grey),
-                  ),
+                  // _ratingStars(),
+                  // Text(
+                  //   '${widget.apartment.rating.toStringAsFixed(1)} (${widget.apartment.ratingCount} reviews)',
+                  //   style: const TextStyle(fontSize: 12, color: Colors.grey),
+                  // ),
                 ],
               ),
             ),

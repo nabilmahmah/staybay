@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:staybay/services/get_apartment_service.dart';
+import 'package:staybay/test.dart';
 import '../app_theme.dart';
 import '../services/apartment_service.dart';
 import '../models/apartment_model.dart';
@@ -13,19 +15,11 @@ class FavoritesScreen extends StatefulWidget {
 }
 
 class _FavoritesScreenState extends State<FavoritesScreen> {
-  //inal ApartmentService _apartmentService = ApartmentService();
-  late Future<List<Apartment>> _favoritesFuture;
-
-  List<Apartment> _fetchMockFavorites() {
-    return ApartmentService.mockApartments
-        .where((apartment) => apartment.isFavorite)
-        .toList();
-  }
-
+  late Future<List<Apartment>> future;
   @override
   void initState() {
     super.initState();
-    _favoritesFuture = Future.value(_fetchMockFavorites());
+    future = GetApartmentService.getFavorites();
   }
 
   @override
@@ -34,48 +28,54 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
 
     return Scaffold(
       appBar: AppBar(title: const Text('My Favorites'), centerTitle: true),
-     
       body: FutureBuilder<List<Apartment>>(
-        future: _favoritesFuture,
+        future: future,
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
-              child: CircularProgressIndicator(
-                color: theme.colorScheme.primary,
-              ),
-            );
-          } else if (snapshot.hasError) {
-            return Center(
-              child: Text('Error loading favorites: ${snapshot.error}'),
-            );
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.favorite_border,
-                    size: 80,
-                    color: theme.colorScheme.onSurfaceVariant.withOpacity(0.5),
-                  ),
-                  const SizedBox(height: AppSizes.paddingMedium),
-                  Text(
-                    'No Favorite items yet',
-                    style: theme.textTheme.titleMedium?.copyWith(
-                      color: theme.colorScheme.onSurfaceVariant,
+          if (snapshot.hasError) {
+            return Center(child: Text('oops Error: ${snapshot.error}'));
+          } else if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasData) {
+            var favorites = snapshot.data!;
+            if (favorites.isEmpty) {
+              return Center(
+                child: Column(
+                  children: [
+                    const SizedBox(height: 32),
+                    Icon(
+                      Icons.favorite_border,
+                      size: 80,
+                      color: theme.colorScheme.primary,
                     ),
-                  ),
-                ],
-              ),
-            );
-          } else {
-            final favorites = snapshot.data!;
+                    const SizedBox(height: 16),
+                    Text(
+                      'No Favorite items yet',
+                      style: theme.textTheme.headlineMedium,
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        setState(() {});
+                      },
+                      child: Text('Refresh'),
+                    ),
+                  ],
+                ),
+              );
+            }
             return ListView.builder(
-              padding: const EdgeInsets.all(AppSizes.paddingMedium),
+              padding: const EdgeInsets.all(16.0),
               itemCount: favorites.length,
               itemBuilder: (context, index) {
-                return CompactApartmentCard(apartment: favorites[index]);
+                var apartment = favorites[index];
+                return CompactApartmentCard(apartment: apartment);
               },
+            );
+          } else {
+            return Center(
+              child: Text(
+                'No favorites yet!',
+                style: theme.textTheme.headlineMedium,
+              ),
             );
           }
         },

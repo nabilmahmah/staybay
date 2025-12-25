@@ -69,7 +69,7 @@ class MyApp extends StatelessWidget {
                     themeMode: themeState is DarkModeState
                         ? ThemeMode.dark
                         : ThemeMode.light,
-                    initialRoute: AccountScreen.routeName,
+                    initialRoute: AppBottomNavBar.routeName,
                     routes: _buildAppRoutes(),
                   );
                 },

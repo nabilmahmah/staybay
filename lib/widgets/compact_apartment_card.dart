@@ -10,10 +10,10 @@ class CompactApartmentCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final heartColor = theme.colorScheme.error; 
+    final heartColor = theme.colorScheme.error;
 
     return InkWell(
-      onTap: () {   
+      onTap: () {
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => ApartmentDetailsScreen(apartment: apartment),
@@ -23,11 +23,11 @@ class CompactApartmentCard extends StatelessWidget {
       borderRadius: BorderRadius.circular(AppSizes.borderRadiusLarge),
       child: Card(
         color: theme.cardColor,
-        elevation: 1, 
+        elevation: 1,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(AppSizes.borderRadiusLarge),
           side: BorderSide(
-            color: theme.colorScheme.primary.withOpacity(0.6), 
+            color: theme.colorScheme.primary.withOpacity(0.6),
             width: 1.5,
           ),
         ),
@@ -39,17 +39,21 @@ class CompactApartmentCard extends StatelessWidget {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(AppSizes.borderRadiusSmall),
-                child: Image.asset(
+                child: Image.network(
                   apartment.imagePath,
                   fit: BoxFit.cover,
                   height: 100,
-                  width: 100, 
+                  width: 100,
                   errorBuilder: (context, error, stackTrace) => Container(
                     height: 100,
                     width: 100,
                     color: Colors.grey[300],
                     alignment: Alignment.center,
-                    child: const Icon(Icons.broken_image, size: 40, color: Colors.grey),
+                    child: const Icon(
+                      Icons.broken_image,
+                      size: 40,
+                      color: Colors.grey,
+                    ),
                   ),
                 ),
               ),
@@ -68,10 +72,14 @@ class CompactApartmentCard extends StatelessWidget {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    const SizedBox(height: AppSizes.paddingSmall / 2), 
+                    const SizedBox(height: AppSizes.paddingSmall / 2),
                     Row(
                       children: [
-                        Icon(Icons.location_on, size: 16, color: theme.colorScheme.onSurfaceVariant),
+                        Icon(
+                          Icons.location_on,
+                          size: 16,
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
                         const SizedBox(width: AppSizes.paddingSmall / 2),
                         Text(
                           apartment.location,
@@ -89,7 +97,7 @@ class CompactApartmentCard extends StatelessWidget {
                         const Icon(Icons.star, size: 18, color: Colors.amber),
                         const SizedBox(width: AppSizes.paddingSmall / 2),
                         Text(
-                          '${apartment.rating.toStringAsFixed(1)} (${apartment.reviewsCount})',
+                          '${apartment.rating} (${apartment.ratingCount})',
                           style: theme.textTheme.bodyMedium?.copyWith(
                             fontWeight: FontWeight.bold,
                             color: theme.colorScheme.onSurface,
@@ -103,7 +111,8 @@ class CompactApartmentCard extends StatelessWidget {
                       TextSpan(
                         children: [
                           TextSpan(
-                            text: '\$${apartment.pricePerNight.toStringAsFixed(0)}',
+                            text:
+                                '\$${apartment.pricePerNight.toStringAsFixed(0)}',
                             style: theme.textTheme.titleLarge?.copyWith(
                               fontWeight: FontWeight.w900,
                               color: theme.colorScheme.primary,
@@ -129,7 +138,11 @@ class CompactApartmentCard extends StatelessWidget {
                   icon: Icon(Icons.favorite, color: heartColor, size: 30),
                   onPressed: () {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Removed ${apartment.title} from favorites.')),
+                      SnackBar(
+                        content: Text(
+                          'Removed ${apartment.title} from favorites.',
+                        ),
+                      ),
                     );
                   },
                 ),
@@ -141,4 +154,3 @@ class CompactApartmentCard extends StatelessWidget {
     );
   }
 }
-

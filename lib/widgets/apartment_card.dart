@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import '../app_theme.dart';
 import '../models/apartment_model.dart';
@@ -6,10 +5,13 @@ import '../screens/apartment_details_screen.dart';
 
 class ApartmentCard extends StatelessWidget {
   final Apartment apartment;
-  VoidCallback? onTap;
-   ApartmentCard({super.key, required this.apartment, this.onTap});
+  const ApartmentCard({super.key, required this.apartment});
 
-  Widget _buildDetailItem(BuildContext context, {required IconData icon, required String value}) {
+  Widget _buildDetailItem(
+    context, {
+    required IconData icon,
+    required String value,
+  }) {
     final theme = Theme.of(context);
     return Row(
       children: [
@@ -31,8 +33,7 @@ class ApartmentCard extends StatelessWidget {
     final theme = Theme.of(context);
 
     return InkWell(
-      onTap: onTap ??
-      ()  {   
+      onTap: () {
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => ApartmentDetailsScreen(apartment: apartment),
@@ -68,7 +69,7 @@ class ApartmentCard extends StatelessWidget {
                 ),
               ),
             ),
-            
+
             Padding(
               padding: const EdgeInsets.all(AppSizes.paddingMedium),
               child: Column(
@@ -86,7 +87,11 @@ class ApartmentCard extends StatelessWidget {
                   const SizedBox(height: AppSizes.paddingSmall / 2),
                   Row(
                     children: [
-                      Icon(Icons.location_on, size: 18, color: theme.colorScheme.onSurfaceVariant),
+                      Icon(
+                        Icons.location_on,
+                        size: 18,
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
                       const SizedBox(width: AppSizes.paddingSmall / 2),
                       Text(
                         apartment.location,
@@ -100,15 +105,27 @@ class ApartmentCard extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      _buildDetailItem(context, icon: Icons.king_bed, value: '${apartment.beds} Beds'),
-                      _buildDetailItem(context, icon: Icons.bathtub, value: '${apartment.baths} Baths'),
-                      _buildDetailItem(context, icon: Icons.square_foot, value: '${apartment.areaSqft} Sqft'),
+                      _buildDetailItem(
+                        context,
+                        icon: Icons.king_bed,
+                        value: '${apartment.beds} Beds',
+                      ),
+                      _buildDetailItem(
+                        context,
+                        icon: Icons.bathtub,
+                        value: '${apartment.baths} Baths',
+                      ),
+                      _buildDetailItem(
+                        context,
+                        icon: Icons.square_foot,
+                        value: '${apartment.areaSqft} Sqft',
+                      ),
                       Row(
                         children: [
                           const Icon(Icons.star, size: 18, color: Colors.amber),
                           const SizedBox(width: AppSizes.paddingSmall / 2),
                           Text(
-                            '${apartment.rating.toStringAsFixed(1)} (${apartment.reviewsCount})',
+                            '${apartment.rating} (${apartment.ratingCount})',
                             style: theme.textTheme.bodyMedium?.copyWith(
                               fontWeight: FontWeight.bold,
                               color: theme.colorScheme.onSurface,
@@ -118,7 +135,7 @@ class ApartmentCard extends StatelessWidget {
                       ),
                     ],
                   ),
-                  
+
                   const SizedBox(height: AppSizes.paddingMedium),
                   Align(
                     alignment: Alignment.centerRight,
@@ -126,7 +143,7 @@ class ApartmentCard extends StatelessWidget {
                       TextSpan(
                         children: [
                           TextSpan(
-                            text: '\$${apartment.pricePerNight.toStringAsFixed(0)}',
+                            text: '\$${apartment.pricePerNight}',
                             style: theme.textTheme.titleLarge?.copyWith(
                               fontWeight: FontWeight.w900,
                               color: theme.colorScheme.primary,

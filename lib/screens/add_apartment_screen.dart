@@ -29,19 +29,7 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
   final _descriptionController = TextEditingController();
 
   /// ===== AMENITIES =====
-  final List<String> _allAmenities = [
-    'wifi',
-    'pool',
-    'parking',
-    'gym',
-    'balcony',
-    'heating',
-    'garden',
-    'bbq area',
-    'fireplace',
-    'mountain view',
-    'pets allowed',
-  ];
+  final List<String> _allAmenities = ['wifi', 'pool'];
 
   List<String> _selectedAmenities = [];
 
@@ -86,24 +74,6 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
         return Icons.wifi;
       case 'pool':
         return Icons.pool;
-      case 'parking':
-        return Icons.local_parking;
-      case 'gym':
-        return Icons.fitness_center;
-      case 'balcony':
-        return Icons.balcony;
-      case 'heating':
-        return Icons.fireplace;
-      case 'garden':
-        return Icons.yard;
-      case 'bbq area':
-        return Icons.outdoor_grill;
-      case 'fireplace':
-        return Icons.fireplace;
-      case 'mountain view':
-        return Icons.terrain;
-      case 'pets allowed':
-        return Icons.pets;
       default:
         return Icons.check_circle_outline;
     }
@@ -119,7 +89,6 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
         _webImageBytes[img.name] = await img.readAsBytes();
       }
     }
-
     setState(() => _pickedImages.addAll(images));
   }
 
@@ -227,8 +196,8 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
       location: _locationController.text.trim(),
       pricePerNight: d(_priceController.text),
       imagePath: imagePaths.isNotEmpty ? imagePaths.first : '',
-      rating: 0,
-      reviewsCount: 0,
+      rating: '0',
+      ratingCount: 0,
       beds: i(_bedsController.text),
       baths: i(_bathsController.text),
       areaSqft: d(_areaController.text),
@@ -238,10 +207,12 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
       imagesPaths: imagePaths,
     );
 
-    ApartmentService.mockApartments.add(apartment);
+    //! add apartment service
+    // ApartmentService.mockApartments.add(apartment);
 
-    Navigator.of(context)
-        .pushNamedAndRemoveUntil(AppBottomNavBar.routeName, (_) => false);
+    Navigator.of(
+      context,
+    ).pushNamedAndRemoveUntil(AppBottomNavBar.routeName, (_) => false);
   }
 
   /// ===== AMENITIES UI =====

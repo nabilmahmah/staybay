@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import '../app_theme.dart';
 
@@ -9,18 +8,12 @@ class AmenitiesResponsiveGrid extends StatelessWidget {
 
   IconData _getAmenityIcon(String amenity) {
     switch (amenity.toLowerCase()) {
-      case 'wifi': return Icons.wifi;
-      case 'pool': return Icons.pool;
-      case 'parking': return Icons.local_parking;
-      case 'gym': return Icons.fitness_center;
-      case 'balcony': return Icons.balcony;
-      case 'heating': return Icons.fireplace;
-      case 'garden': return Icons.yard;
-      case 'bbq area': return Icons.outdoor_grill;
-      case 'fireplace': return Icons.fireplace;
-      case 'mountain view': return Icons.terrain;
-      case 'pets allowed': return Icons.pets;
-      default: return Icons.check_circle_outline;
+      case 'wifi':
+        return Icons.wifi;
+      case 'pool':
+        return Icons.pool;
+      default:
+        return Icons.check_circle_outline;
     }
   }
 
@@ -32,8 +25,8 @@ class AmenitiesResponsiveGrid extends StatelessWidget {
       return const SizedBox.shrink();
     }
     return Wrap(
-      spacing: AppSizes.paddingMedium, 
-      runSpacing: AppSizes.paddingMedium, 
+      spacing: AppSizes.paddingMedium,
+      runSpacing: AppSizes.paddingMedium,
       children: amenities.map((amenity) {
         return Container(
           padding: const EdgeInsets.symmetric(
@@ -41,11 +34,11 @@ class AmenitiesResponsiveGrid extends StatelessWidget {
             vertical: AppSizes.paddingSmall,
           ),
           decoration: BoxDecoration(
-            color: theme.colorScheme.primary.withOpacity(0.08),
+            color: theme.colorScheme.primary.withValues(alpha: 0.08),
             borderRadius: BorderRadius.circular(AppSizes.borderRadiusLarge),
           ),
           child: Row(
-            mainAxisSize: MainAxisSize.min, 
+            mainAxisSize: MainAxisSize.min,
             children: [
               Icon(
                 _getAmenityIcon(amenity),
@@ -67,4 +60,3 @@ class AmenitiesResponsiveGrid extends StatelessWidget {
     );
   }
 }
-

@@ -1,3 +1,4 @@
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import '../app_theme.dart';
@@ -40,30 +41,32 @@ class _DetailsImageCarouselState extends State<DetailsImageCarousel> {
       margin: const EdgeInsets.symmetric(horizontal: 4.0),
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: _currentPage == index
-            ? Colors.white
-            
-            : Colors.white54,
+        color: _currentPage == index ? Colors.white : Colors.white54,
       ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    log(widget.imagesPaths.toString());
     return Stack(
       children: <Widget>[
         PageView.builder(
           controller: _pageController,
           itemCount: widget.imagesPaths.length,
           itemBuilder: (context, index) {
-            return Image.asset(
+            return Image.network(
               widget.imagesPaths[index],
               fit: BoxFit.cover,
               width: double.infinity,
               errorBuilder: (context, error, stackTrace) => Container(
                 color: Colors.grey[300],
                 alignment: Alignment.center,
-                child: const Icon(Icons.error_outline, size: 50, color: Colors.grey),
+                child: const Icon(
+                  Icons.error_outline,
+                  size: 50,
+                  color: Colors.grey,
+                ),
               ),
             );
           },
@@ -82,4 +85,3 @@ class _DetailsImageCarouselState extends State<DetailsImageCarousel> {
     );
   }
 }
-

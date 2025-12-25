@@ -17,27 +17,9 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final TextEditingController _searchController = TextEditingController();
   List<Apartment> _apartments = [];
-  bool _isLoading = true;
-
   @override
   void initState() {
     super.initState();
-    _fetchApartments();
-  }
-
-  Future<void> _fetchApartments() async {
-    try {
-      final data = await ApartmentService().fetchAllApartments();
-      setState(() {
-        _apartments = data;
-        _isLoading = false;
-      });
-    } catch (e) {
-      setState(() {
-        _isLoading = false;
-      });
-      print('Error fetching apartments: $e');
-    }
   }
 
   @override
@@ -60,22 +42,16 @@ class _HomePageState extends State<HomePage> {
           ),
           //   SearchFiltersWidget(),
           Expanded(
-            child: _isLoading
-                ? Center(
-                    child: CircularProgressIndicator(
-                      color: theme.colorScheme.primary,
-                    ),
-                  )
-                : ListView.builder(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: AppSizes.paddingMedium,
-                      vertical: AppSizes.paddingSmall,
-                    ),
-                    itemCount: _apartments.length,
-                    itemBuilder: (context, index) {
-                      return ApartmentCard(apartment: _apartments[index]);
-                    },
-                  ),
+            child: ListView.builder(
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppSizes.paddingMedium,
+                vertical: AppSizes.paddingSmall,
+              ),
+              itemCount: _apartments.length,
+              itemBuilder: (context, index) {
+                return ApartmentCard(apartment: _apartments[index]);
+              },
+            ),
           ),
         ],
       ),

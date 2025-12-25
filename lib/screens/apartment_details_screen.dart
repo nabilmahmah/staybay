@@ -20,13 +20,7 @@ class ApartmentDetailsScreen extends StatefulWidget {
 }
 
 class _ApartmentDetailsScreenState extends State<ApartmentDetailsScreen> {
-  late bool _isFavorite;
-
-  @override
-  void initState() {
-    super.initState();
-    _isFavorite = widget.apartment.isFavorite;
-  }
+  // bool _isFavorite = false;
 
   Widget _buildFeatureIcon(
     BuildContext context, {
@@ -72,17 +66,15 @@ class _ApartmentDetailsScreenState extends State<ApartmentDetailsScreen> {
     }
   }
 
-void _navigateToBooking(BuildContext context) {
-  Navigator.push(
-    context,
-    MaterialPageRoute(
-      builder: (_) => BookingDetailsScreen(
-        apartment: widget.apartment,
+  void _navigateToBooking(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => BookingDetailsScreen(apartment: widget.apartment),
       ),
-    ),
-  );
-}
-  
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -91,7 +83,7 @@ void _navigateToBooking(BuildContext context) {
     return Scaffold(
       body: NestedScrollView(
         headerSliverBuilder: (context, innerBoxIsScrolled) {
-          return <Widget>[
+          return [
             SliverAppBar(
               expandedHeight: 350.0,
               pinned: true,
@@ -105,18 +97,17 @@ void _navigateToBooking(BuildContext context) {
               actions: [
                 IconButton(
                   icon: Icon(
-                    _isFavorite ? Icons.favorite : Icons.favorite_border,
-                    color: _isFavorite ? Colors.red : Colors.white,
+                    widget.apartment.isFavorite
+                        ? Icons.favorite
+                        : Icons.favorite_border,
+                    color: widget.apartment.isFavorite
+                        ? Colors.red
+                        : Colors.white,
                   ),
                   onPressed: () {
-                    setState(() {
-                      final index = ApartmentService.mockApartments.indexWhere(
-                        (apt) => apt.id == apartmentDetails.id);
-                      ApartmentService.mockApartments[index].isFavorite = !_isFavorite;
-                      _isFavorite = !_isFavorite;
-                    });
+                    // ! from backend update favorite status
                   },
-               ),
+                ),
               ],
               flexibleSpace: FlexibleSpaceBar(
                 background: DetailsImageCarousel(
@@ -130,7 +121,7 @@ void _navigateToBooking(BuildContext context) {
           padding: const EdgeInsets.all(AppSizes.paddingLarge),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
+            children: [
               Text(
                 apartmentDetails.title,
                 style: AppStyles.titleStyle.copyWith(
@@ -161,8 +152,7 @@ void _navigateToBooking(BuildContext context) {
                     TextSpan(
                       children: [
                         TextSpan(
-                          text:
-                              '\$${apartmentDetails.pricePerNight.toStringAsFixed(0)}',
+                          text: apartmentDetails.pricePerNight.toString(),
                           style: theme.textTheme.titleLarge?.copyWith(
                             fontWeight: FontWeight.w900,
                             color: theme.colorScheme.primary,
@@ -201,8 +191,7 @@ void _navigateToBooking(BuildContext context) {
                     context,
                     icon: Icons.square_foot,
                     label: 'Area',
-                    value:
-                        '${apartmentDetails.areaSqft.toStringAsFixed(0)} Sqft',
+                    value: '${apartmentDetails.areaSqft} Sqft',
                   ),
                 ],
               ),
@@ -230,6 +219,7 @@ void _navigateToBooking(BuildContext context) {
                     ],
                   ),
                   const SizedBox(height: AppSizes.paddingSmall),
+                  // todo from backend get rating and rating count
                   InkWell(
                     onTap: () => _showRatingDialog(context),
                     borderRadius: BorderRadius.circular(
@@ -244,7 +234,7 @@ void _navigateToBooking(BuildContext context) {
                         children: [
                           ...List.generate(5, (index) {
                             return Icon(
-                              index < apartmentDetails.rating.round()
+                              index < int.parse(apartmentDetails.rating)
                                   ? Icons.star
                                   : Icons.star_border,
                               color: Colors.amber,
@@ -253,7 +243,7 @@ void _navigateToBooking(BuildContext context) {
                           }),
                           const SizedBox(width: AppSizes.paddingSmall),
                           Text(
-                            '(${apartmentDetails.reviewsCount} Reviews)',
+                            '(${apartmentDetails.ratingCount} Reviews)',
                             style: theme.textTheme.bodyMedium?.copyWith(
                               color: AppColors.secondaryText,
                             ),
