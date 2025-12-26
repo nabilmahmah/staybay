@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:staybay/models/apartment_model.dart';
+import 'package:staybay/services/add_apartment_service.dart';
 import 'package:staybay/widgets/app_bottom_nav_bar.dart';
 import '../services/apartment_service.dart';
 
@@ -180,39 +181,38 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
   }
 
   /// ===== SAVE =====
-  void _saveApartment() {
-    if (!_formKey.currentState!.validate()) return;
+  void _saveApartment() async {
+    if (_formKey.currentState?.validate() ?? false) {
+      var response = await AddApartmentService.addApartment(
+        context: context,
+        title: _titleController.text,
+        description: _descriptionController.text,
+        cityId: '1', // TODO: get city id from location
+        price: _priceController.text,
+        bedrooms: _bedsController.text,
+        bathrooms: _bathsController.text,
+        size: _areaController.text,
+        hasPool: _selectedAmenities.contains('pool') ? '1' : '0',
+        hasWifi: _selectedAmenities.contains('wifi') ? '1' : '0',
+        imageFiles: _pickedImages,
+      );
 
-    double d(String v) => double.tryParse(v) ?? 0;
-    int i(String v) => int.tryParse(v) ?? 0;
-
-    final imagePaths = kIsWeb
-        ? _pickedImages.map((e) => e.name).toList()
-        : _pickedImages.map((e) => e.path).toList();
-
-    final apartment = Apartment(
-      id: DateTime.now().millisecondsSinceEpoch.toString(),
-      title: _titleController.text.trim(),
-      location: _locationController.text.trim(),
-      pricePerNight: d(_priceController.text),
-      imagePath: imagePaths.isNotEmpty ? imagePaths.first : '',
-      rating: '0',
-      ratingCount: 0,
-      beds: i(_bedsController.text),
-      baths: i(_bathsController.text),
-      areaSqft: d(_areaController.text),
-      ownerName: '',
-      amenities: _selectedAmenities,
-      description: _descriptionController.text.trim(),
-      imagesPaths: imagePaths,
-    );
-
-    //! add apartment service
-    // ApartmentService.mockApartments.add(apartment);
-
-    Navigator.of(
-      context,
-    ).pushNamedAndRemoveUntil(AppBottomNavBar.routeName, (_) => false);
+      if (response != null && response.statusCode == 201) {
+        Navigator.of(
+          context,
+        ).pushNamedAndRemoveUntil(AppBottomNavBar.routeName, (_) => false);
+      }
+    } else {
+      if (_pickedImages.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Please add at least one image')),
+        );
+        return;
+      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Please fill all required fields')),
+      );
+    }
   }
 
   /// ===== AMENITIES UI =====
@@ -249,7 +249,7 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
     );
   }
 
-  InputDecoration _dec(String label, IconData icon) {
+  InputDecoration _decoration(String label, IconData icon) {
     return InputDecoration(
       labelText: label,
       prefixIcon: Icon(icon),
@@ -258,20 +258,21 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
   }
 
   Widget _field(
-    TextEditingController c,
-    String l,
-    IconData i, {
-    TextInputType t = TextInputType.text,
-    int m = 1,
+    TextEditingController controller,
+    String lable,
+    IconData icone, {
+    TextInputType inputType = TextInputType.text,
+    int maxlines = 1,
   }) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 14),
       child: TextFormField(
-        controller: c,
-        keyboardType: t,
-        maxLines: m,
-        validator: (v) => v == null || v.isEmpty ? 'Required' : null,
-        decoration: _dec(l, i),
+        controller: controller,
+        keyboardType: inputType,
+        maxLines: maxlines,
+        validator: (validation) =>
+            validation == null || validation.isEmpty ? 'Required' : null,
+        decoration: _decoration(lable, icone),
       ),
     );
   }
@@ -294,7 +295,7 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
                 _priceController,
                 'Price per night',
                 Icons.attach_money,
-                t: TextInputType.number,
+                inputType: TextInputType.number,
               ),
               Row(
                 children: [
@@ -303,7 +304,7 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
                       _bedsController,
                       'Beds',
                       Icons.bed,
-                      t: TextInputType.number,
+                      inputType: TextInputType.number,
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -312,7 +313,7 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
                       _bathsController,
                       'Baths',
                       Icons.bathtub,
-                      t: TextInputType.number,
+                      inputType: TextInputType.number,
                     ),
                   ),
                 ],
@@ -321,13 +322,13 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
                 _areaController,
                 'Area',
                 Icons.square_foot,
-                t: TextInputType.number,
+                inputType: TextInputType.number,
               ),
               _field(
                 _descriptionController,
                 'Description',
                 Icons.description,
-                m: 3,
+                maxlines: 3,
               ),
               const SizedBox(height: 16),
               _amenitiesSection(),

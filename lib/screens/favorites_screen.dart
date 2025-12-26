@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:staybay/services/get_apartment_service.dart';
-import 'package:staybay/test.dart';
-import '../app_theme.dart';
-import '../services/apartment_service.dart';
 import '../models/apartment_model.dart';
 import '../widgets/compact_apartment_card.dart';
 

@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:staybay/consetans.dart';
 
 class RegisterService {
   static Future<Response?> register(
@@ -18,9 +19,8 @@ class RegisterService {
   ) async {
     final Dio dio = Dio();
 
-    final String baseUrl = 'http://10.0.2.2:8000/api';
     final String register = '/user/register';
-    dio.options.baseUrl = baseUrl;
+    dio.options.baseUrl = kBaseUrl;
     var formData = FormData.fromMap({
       "phone": phone,
       "first_name": firstName,
