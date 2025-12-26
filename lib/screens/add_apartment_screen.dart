@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:staybay/models/apartment_model.dart';
+import 'package:staybay/services/add_apartment_service.dart';
 import 'package:staybay/widgets/app_bottom_nav_bar.dart';
 import '../services/apartment_service.dart';
 
@@ -180,7 +181,7 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
   }
 
   /// ===== SAVE =====
-  void _saveApartment() {
+  void _saveApartment() async {
     if (!_formKey.currentState!.validate()) return;
 
     double d(String v) => double.tryParse(v) ?? 0;
@@ -207,12 +208,16 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
       imagesPaths: imagePaths,
     );
 
-    //! add apartment service
-    // ApartmentService.mockApartments.add(apartment);
+    final response = await AddApartmentService.addApartment(
+      context: context,
+      apartment: apartment,
+    );
 
-    Navigator.of(
-      context,
-    ).pushNamedAndRemoveUntil(AppBottomNavBar.routeName, (_) => false);
+    if (response != null && context.mounted) {
+      Navigator.of(
+        context,
+      ).pushNamedAndRemoveUntil(AppBottomNavBar.routeName, (_) => false);
+    }
   }
 
   /// ===== AMENITIES UI =====
