@@ -235,6 +235,7 @@ class _FilterDialogState extends State<FilterDialog> {
             onPressed: () => Navigator.pop(context, {
               'governorate_id': selectedGov?.id,
               'city_id': selectedCity?.id,
+              'city_name': selectedCity?.name,
               'bedrooms': selectedBedrooms,
               'bathrooms': selectedBathrooms,
               'price_min': priceMin,
@@ -246,6 +247,7 @@ class _FilterDialogState extends State<FilterDialog> {
               'has_pool': hasPool,
               'has_wifi': hasWifi,
             }),
+
             child: Text('تطبيق'),
           ),
         ],

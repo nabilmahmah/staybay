@@ -62,7 +62,7 @@ class Apartment {
       title: json['title'],
       location: location,
       pricePerNight: json['price'].toDouble(),
-      imagePath: json['cover_image']['path'],
+      imagePath: imagesPaths.first,
       rating: json['rating'].toString(),
       ratingCount: json['rating_count'],
       beds: json['bedrooms'],

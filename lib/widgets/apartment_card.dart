@@ -56,7 +56,7 @@ class ApartmentCard extends StatelessWidget {
                 top: Radius.circular(AppSizes.borderRadiusLarge),
               ),
 
-              child: Image.asset(
+              child: Image.network(
                 apartment.imagePath,
                 fit: BoxFit.cover,
                 height: 200,

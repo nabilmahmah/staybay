@@ -48,7 +48,7 @@ class AddApartmentService {
     try {
       // Build multipart form data from Apartment object
       final formData = FormData.fromMap({
-        'city_id': cityId, // TODO: replace with apartment.cityId if available
+        'city_id': cityId,
         'title': apartment.title,
         'description': apartment.description,
         'price': apartment.pricePerNight,

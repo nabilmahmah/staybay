@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:staybay/consetans.dart';
+import 'package:staybay/cubits/apartments/aparment_cubit.dart';
 import 'package:staybay/cubits/user/user_cubit.dart';
 import 'package:staybay/screens/my_apartments_screen.dart';
 // import 'package:staybay/test.dart';
@@ -44,6 +45,7 @@ class MyApp extends StatelessWidget {
 
     return MultiBlocProvider(
       providers: [
+        BlocProvider(create: (context) => ApartmentCubit()),
         BlocProvider(create: (context) => UserCubit()..getMe()),
         BlocProvider<LocaleCubit>.value(value: localeCubit),
         BlocProvider(create: (context) => ThemeCubit()),
