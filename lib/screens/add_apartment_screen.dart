@@ -228,11 +228,17 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
   /// ===== SAVE =====
   void _saveApartment() async {
     if (_formKey.currentState?.validate() ?? false) {
+      if (selectedGov == null || selectedCity == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Please select governorate and city')),
+        );
+        return;
+      }
       var response = await AddApartmentService.addApartment(
         context: context,
         title: _titleController.text,
         description: _descriptionController.text,
-        cityId: '1', // TODO: get city id from location
+        cityId: selectedCity!.id.toString(),
         price: _priceController.text,
         bedrooms: _bedsController.text,
         bathrooms: _bathsController.text,
@@ -251,6 +257,12 @@ class _AddApartmentScreenState extends State<AddApartmentScreen> {
       if (_pickedImages.isEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Please add at least one image')),
+        );
+        return;
+      }
+      if (selectedGov == null || selectedCity == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Please select governorate and city')),
         );
         return;
       }

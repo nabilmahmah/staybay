@@ -11,10 +11,9 @@ class FilterDialog extends StatefulWidget {
 }
 
 class _FilterDialogState extends State<FilterDialog> {
-  final GetGovernatesAndCities _getGovernatesAndCities =
+  final GetGovernatesAndCities getGovernatesAndCities =
       GetGovernatesAndCities();
 
-  // القيم المختارة (كأجسام كاملة أو أسماء)
   Governorate? selectedGov;
   City? selectedCity;
   String? selectedBedrooms;
@@ -39,7 +38,7 @@ class _FilterDialogState extends State<FilterDialog> {
   @override
   void initState() {
     super.initState();
-    _loadGovernorates(); // جلب المحافظات فور فتح الـ Dialog
+    _loadGovernorates();
   }
 
   void _validateRange(String type, double? value, bool isMin) {
@@ -72,33 +71,30 @@ class _FilterDialogState extends State<FilterDialog> {
     });
   }
 
-  // تابع جلب المحافظات من الـ API
   Future<void> _loadGovernorates() async {
     try {
-      final data = await _getGovernatesAndCities.getGovernorates();
+      final data = await getGovernatesAndCities.getGovernorates();
       setState(() {
         governorates = data;
         isLoadingGovs = false;
       });
     } catch (e) {
       setState(() => isLoadingGovs = false);
-      // يمكن إظهار رسالة خطأ هنا
     }
   }
 
-  // تابع جلب المدن عند اختيار محافظة
   Future<void> _onGovernorateChanged(Governorate? gov) async {
     if (gov == null) return;
 
     setState(() {
       selectedGov = gov;
-      selectedCity = null; // تصفير المدينة المختارة سابقاً
+      selectedCity = null;
       cities = [];
       isLoadingCities = true;
     });
 
     try {
-      final data = await _getGovernatesAndCities.getCities(gov.id);
+      final data = await getGovernatesAndCities.getCities(gov.id);
       setState(() {
         cities = data;
         isLoadingCities = false;
@@ -118,7 +114,6 @@ class _FilterDialogState extends State<FilterDialog> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              // 1. قائمة المحافظات
               _buildFilterRow(
                 label: 'المحافظة',
                 value: selectedGov?.name,
@@ -138,7 +133,6 @@ class _FilterDialogState extends State<FilterDialog> {
                       ),
               ),
 
-              // 2. قائمة المدن
               _buildFilterRow(
                 label: 'المدينة',
                 value: selectedCity?.name,
@@ -162,7 +156,6 @@ class _FilterDialogState extends State<FilterDialog> {
                       ),
               ),
 
-              // 3. غرف النوم
               _buildFilterRow(
                 label: 'غرف النوم',
                 value: selectedBedrooms,
@@ -175,7 +168,6 @@ class _FilterDialogState extends State<FilterDialog> {
                 ),
               ),
 
-              // 4. دورات المياه
               _buildFilterRow(
                 label: 'دورات المياه',
                 value: selectedBathrooms,
@@ -220,8 +212,6 @@ class _FilterDialogState extends State<FilterDialog> {
                 ratingMax,
               ),
 
-              // Divider(),
-              // إضافة الـ Checkboxes
               CheckboxListTile(
                 title: Text("يوجد مسبح"),
                 value: hasPool,
@@ -229,6 +219,7 @@ class _FilterDialogState extends State<FilterDialog> {
                 secondary: Icon(Icons.pool),
                 controlAffinity: ListTileControlAffinity.leading,
               ),
+
               CheckboxListTile(
                 title: Text("يوجد واي فاي"),
                 value: hasWifi,
@@ -305,7 +296,6 @@ class _FilterDialogState extends State<FilterDialog> {
   }
 }
 
-// الـ Widget المساعد لعرض الصف (قائمة يسار - قيمة يمين)
 Widget _buildFilterRow({
   required String label,
   required String? value,

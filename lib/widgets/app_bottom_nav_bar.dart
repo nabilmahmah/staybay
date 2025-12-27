@@ -18,7 +18,7 @@ class _AppBottomNavBarState extends State<AppBottomNavBar> {
   int _currentIndex = 0;
 
   final List<Widget> _pages = [
-    const HomePage(),
+    HomePage(),
     AddApartmentScreen(),
     const FavoritesScreen(),
     const AccountScreen(),
@@ -29,7 +29,7 @@ class _AppBottomNavBarState extends State<AppBottomNavBar> {
     final theme = Theme.of(context);
 
     final Color activeColor = theme.colorScheme.onPrimary;
-    final Color inactiveColor = activeColor.withOpacity(0.7);
+    final Color inactiveColor = activeColor.withValues(alpha: 0.7);
 
     return Scaffold(
       // الـ body يحتفظ بحالة كل صفحة عبر IndexedStack

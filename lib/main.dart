@@ -73,7 +73,7 @@ class MyApp extends StatelessWidget {
                         ? ThemeMode.dark
                         : ThemeMode.light,
                     // home: Test(),
-                    initialRoute: AppBottomNavBar.routeName,
+                    initialRoute: HomePage.routeName,
                     routes: _buildAppRoutes(),
                   );
                 },
@@ -91,7 +91,7 @@ class MyApp extends StatelessWidget {
       WelcomeScreen.routeName: (context) => const WelcomeScreen(),
       LoginScreen.routeName: (context) => const LoginScreen(),
       SignUpScreen.routeName: (context) => const SignUpScreen(),
-      HomePage.routeName: (context) => const HomePage(),
+      HomePage.routeName: (context) => HomePage(),
       AppBottomNavBar.routeName: (context) => const AppBottomNavBar(),
       SuccessScreen.routeName: (context) {
         final isLogin =
