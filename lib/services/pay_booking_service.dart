@@ -11,7 +11,10 @@ class PayBookingService {
     Dio dio = DioClient.dio;
 
     try {
-      var response = await dio.post('/bookings/pay/$bookingId');
+      var response = await dio.post(
+        '/bookings/pay/$bookingId',
+        options: Options(headers: {'Accept': 'application/json'}),
+      );
 
       if (response.statusCode == 200) {
         if (context.mounted) {

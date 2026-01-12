@@ -71,12 +71,7 @@ class UpdateApartmentService {
       final response = await dio.post(
         '/apartments/${apartment.id}',
         data: formData,
-        // options: Options(
-        //   headers: {
-        //     'Authorization': 'Bearer $token',
-        //     'Accept': 'application/json',
-        //   },
-        // ),
+        options: Options(headers: {'Accept': 'application/json'}),
       );
       log(response.data.toString());
       return response;

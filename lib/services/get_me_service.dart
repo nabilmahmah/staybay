@@ -8,7 +8,10 @@ class GetMeService {
   static Future<User?> getMe() async {
     Dio dio = DioClient.dio;
     try {
-      final response = await dio.get('/user/me');
+      final response = await dio.get(
+        '/user/me',
+        options: Options(headers: {'Accept': 'application/json'}),
+      );
       User user = User.fromJson(response.data['data']);
       log('User data: ${user.avatar}  ');
       return user;

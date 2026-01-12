@@ -23,6 +23,7 @@ class GetApartmentService {
     String sortOrder = 'desc',
   }) async {
     Dio dio = DioClient.dio;
+    dio.options.headers['Accept'] = 'application/json';
     final response = await dio.get(
       '/apartments',
       queryParameters: {

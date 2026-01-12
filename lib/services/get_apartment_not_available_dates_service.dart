@@ -11,7 +11,8 @@ class GetApartmentNotAvailableDatesService {
       Dio dio = DioClient.dio;
 
       var response = await dio.get(
-        '$kBaseUrl/apartments/$apartmentId/not-avaliable-dates',
+        '/apartments/$apartmentId/not-avaliable-dates',
+        options: Options(headers: {'Accept': 'application/json'}),
       );
 
       List<dynamic> data = response.data['data'];

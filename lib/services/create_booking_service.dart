@@ -22,7 +22,11 @@ class CreateBookingService {
         'end_date': formattedEnd,
       });
 
-      var response = await dio.post('/bookings', data: formData);
+      var response = await dio.post(
+        '/bookings',
+        data: formData,
+        options: Options(headers: {'Accept': 'application/json'}),
+      );
 
       if (response.statusCode == 201 || response.statusCode == 200) {
         if (context.mounted) {

@@ -15,6 +15,7 @@ class RateBookingService {
       var response = await dio.post(
         '/bookings/rate/$bookingId',
         data: {'rating': rating},
+        options: Options(headers: {'Accept': 'application/json'}),
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {

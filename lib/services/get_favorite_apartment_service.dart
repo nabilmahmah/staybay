@@ -11,7 +11,10 @@ class GetApartmentService {
     List<Apartment> favoriteApartments = [];
 
     try {
-      var response = await dio.get('/apartments/favorite');
+      var response = await dio.get(
+        '/apartments/favorite',
+        options: Options(headers: {'Accept': 'application/json'}),
+      );
       dynamic jsonData = response.data;
       List<dynamic> apartmentsJson = jsonData['data'];
       for (var apartmentJson in apartmentsJson) {

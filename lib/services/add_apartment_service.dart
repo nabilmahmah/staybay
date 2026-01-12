@@ -12,6 +12,7 @@ class AddApartmentService {
   }) async {
     final dio = DioClient.dio;
     final token = DioClient.token;
+    dio.options.headers['Accept'] = 'application/json';
     if (token == null) {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(

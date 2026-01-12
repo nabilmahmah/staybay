@@ -8,7 +8,10 @@ class GetMyBookingService {
     try {
       Dio dio = DioClient.dio;
 
-      var response = await dio.get('/bookings');
+      var response = await dio.get(
+        '/bookings',
+        options: Options(headers: {'Accept': 'application/json'}),
+      );
 
       if (response.statusCode == 200) {
         final List<BookModel> myBooking = [];

@@ -29,6 +29,7 @@ class UserUpdateBookingService {
       var response = await dio.put(
         '/bookings/update/user/$bookingId',
         data: formData,
+        options: Options(headers: {'Accept': 'application/json'}),
       );
 
       if (response.statusCode == 201 || response.statusCode == 200) {

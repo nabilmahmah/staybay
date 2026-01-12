@@ -21,7 +21,10 @@ class GetGovernatesAndCities {
 
   Future<List<City>> getCities(int governorateId) async {
     try {
-      final response = await _dio.get('/governorates/$governorateId');
+      final response = await _dio.get(
+        '/governorates/$governorateId',
+        options: Options(headers: {'Accept': 'application/json'}),
+      );
       if (response.statusCode == 200) {
         List data = response.data['data']['cities'];
         return data.map((json) => City.fromJson(json)).toList();

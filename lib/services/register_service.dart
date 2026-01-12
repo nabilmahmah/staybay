@@ -29,7 +29,16 @@ class RegisterService {
       "id_card": await MultipartFile.fromFile(idCardfile.path),
     });
     try {
-      final response = await dio.post('/user/register', data: formData);
+      final response = await dio.post(
+        '/user/register',
+        data: formData,
+        options: Options(
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            'Accept': 'application/json',
+          },
+        ),
+      );
 
       log('Response data: ${response.data}');
       ScaffoldMessenger.of(context).showSnackBar(
