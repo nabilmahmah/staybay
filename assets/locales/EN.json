@@ -301,13 +301,16 @@
      "status_all":{
       "pending":"pending",
       "approved":"approved",
+      "approved1": "approve",
       "rejected":"rejected",
+      "rejected1": "reject",
       "cancelled":"cancelled",
       "completed":"completed",
       "started":"started",
       "finished":"finished",
       "failed":"failed",
-      "error":"Error"
+      "error": "Error",
+      "booking": "Booking"
     },
     "total": "total : ",
     "status": "Status: ",
@@ -404,13 +407,16 @@
     "status":{
       "pending":"pending",
       "approved":"approved",
+      "approved1": "approve",
       "rejected":"rejected",
+      "rejected1": "reject",
       "cancelled":"cancelled",
       "completed":"completed",
       "started":"started",
       "finished":"finished",
       "failed":"failed",
-      "error":"Error"
+      "error": "Error",
+      "booking": "Booking"
     },
     "Check-in":"Check-in",
     "Check-out":"Check-out",
