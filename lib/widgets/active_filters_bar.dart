@@ -18,88 +18,90 @@ class ActiveFiltersBar extends StatelessWidget {
   Widget build(BuildContext context) {
     if (filters.isEmpty) return const SizedBox.shrink();
 
-    final theme = Theme.of(context);
-
     return BlocBuilder<LocaleCubit, LocaleState>(
       builder: (context, state) {
-        Map<String, dynamic> locale =
-            state.localizedStrings['activeFilters'] ?? {};
+        final locale = state.localizedStrings['activeFilters'] ?? {};
+        final processedKeys = <String>{}; // لمنع تكرار الـ Chips للنطاقات
 
         final chips = filters.entries
             .map((entry) {
-              final label = _labelFor(locale, entry.key, entry.value);
-              if (label == null) return null;
+              final key = entry.key;
+              if (processedKeys.contains(key)) return null;
 
-              return Padding(
-                padding: const EdgeInsets.only(right: 8),
-                child: Chip(
-                  label: Text(label),
-                  deleteIcon: const Icon(Icons.close, size: 18),
-                  onDeleted: () => onRemove(entry.key),
-                  backgroundColor: theme.colorScheme.primary.withValues(
-                    alpha: 0.15,
-                  ),
-                  labelStyle: TextStyle(
-                    color: theme.colorScheme.primary,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              );
+              // معالجة النطاقات (السعر، المساحة، التقييم)
+              if (key.contains('_min') || key.contains('_max')) {
+                final baseKey = key.split(
+                  '_',
+                )[0]; // ستكون 'price' أو 'size' أو 'rating'
+                processedKeys.add('${baseKey}_min');
+                processedKeys.add('${baseKey}_max');
+
+                final label = _labelForRange(locale, baseKey, filters);
+                return _buildChip(context, label, baseKey);
+              }
+
+              // معالجة الفلاتر العادية
+              processedKeys.add(key);
+              final label = _labelFor(locale, key, entry.value);
+              if (label == null) return null;
+              return _buildChip(context, label, key);
             })
             .whereType<Widget>()
             .toList();
 
         if (chips.isEmpty) return const SizedBox.shrink();
 
-        return Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppSizes.paddingMedium,
-            vertical: AppSizes.paddingSmall,
-          ),
-          child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(children: chips),
-          ),
+        return Container(
+          height: 50,
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: ListView(scrollDirection: Axis.horizontal, children: chips),
         );
       },
     );
   }
 
+  // دالة بناء الـ Chip الموحدة
+  Widget _buildChip(BuildContext context, String label, String key) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 4),
+      child: Chip(
+        label: Text(label),
+        onDeleted: () => onRemove(key),
+        deleteIcon: const Icon(Icons.close, size: 16),
+      ),
+    );
+  }
+
+  // دالة مخصصة للنطاقات
+  String _labelForRange(
+    Map<String, dynamic> locale,
+    String base,
+    Map<String, dynamic> filters,
+  ) {
+    final min = filters['${base}_min'];
+    final max = filters['${base}_max'];
+    final name = locale[base] ?? base;
+
+    if (min != null && max != null) return '$name: $min - $max';
+    if (min != null) return '$name ≥ $min';
+    return '$name ≤ $max';
+  }
+
+  // دالة للفلاتر العادية
   String? _labelFor(Map<String, dynamic> locale, String key, dynamic value) {
     switch (key) {
       case 'city_name':
-        return '${locale['city'] ?? 'City'}: $value';
-
+        return '${locale['city']}: $value';
       case 'bedrooms':
-        return '${locale['beds'] ?? 'Beds'}: $value';
-
+        return '${locale['beds']}: $value';
       case 'bathrooms':
-        return '${locale['baths'] ?? 'Baths'}: $value';
-
-      case 'price_min':
-        return filters.containsKey('price_max')
-            ? '${locale['price'] ?? 'Price'}: \$${filters['price_min']} - \$${filters['price_max']}'
-            : '${locale['price'] ?? 'Price'} ≥ \$${filters['price_min']}';
-
-      case 'size_min':
-        return filters.containsKey('size_max')
-            ? '${locale['size'] ?? 'Area'}: ${filters['size_min']} - ${filters['size_max']} m²'
-            : '${locale['size'] ?? 'Area'} ≥ ${filters['size_min']} m²';
-
-      case 'rating_min':
-        return filters.containsKey('rating_max')
-            ? '${locale['rating'] ?? 'Rating'}: ${filters['rating_min']} - ${filters['rating_max']}'
-            : '${locale['rating'] ?? 'Rating'} ≥ ${filters['rating_min']}';
-
+        return '${locale['baths']}: $value';
       case 'has_pool':
         return locale['pool'];
-
       case 'has_wifi':
         return locale['wifi'];
-
       case 'search':
-        return 'Search: "$value"';
-
+        return '"$value"';
       default:
         return null;
     }

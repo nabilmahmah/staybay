@@ -144,24 +144,20 @@ class _HomePageState extends State<HomePage> {
                       setState(() {
                         final newFilters = Map<String, dynamic>.from(filters);
 
-                        newFilters.remove(key);
-
-                        if (key == 'price_min' || key == 'price_max') {
-                          newFilters.remove('price_min');
-                          newFilters.remove('price_max');
-                        }
-                        if (key == 'size_min' || key == 'size_max') {
-                          newFilters.remove('size_min');
-                          newFilters.remove('size_max');
-                        }
-                        if (key == 'rating_min' || key == 'rating_max') {
-                          newFilters.remove('rating_min');
-                          newFilters.remove('rating_max');
+                        // إذا كان المفتاح هو أحد النطاقات، نحذف الصغرى والعظمى معاً
+                        if (key == 'price' ||
+                            key == 'size' ||
+                            key == 'rating') {
+                          newFilters.remove('${key}_min');
+                          newFilters.remove('${key}_max');
+                        } else {
+                          newFilters.remove(key);
                         }
 
                         filters = newFilters;
                       });
 
+                      // إعادة جلب البيانات بعد تحديث الفلاتر
                       context.read<ApartmentCubit>().fetchApartments(
                         refresh: true,
                         filters: filters,
