@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
@@ -42,7 +43,16 @@ void main() async {
   final bool islogin = prefs.getBool(kIsLoggedIn) ?? false;
   final bool isDark = prefs.getBool(kIsDark) ?? false;
   log(islogin.toString());
-  runApp(MyApp(islogin: islogin, isDark: isDark));
+  runZonedGuarded(
+    () {
+      WidgetsFlutterBinding.ensureInitialized();
+      runApp(MyApp(islogin: islogin, isDark: isDark));
+    },
+    (error, stackTrace) {
+      print("😎Caught by Zone:$error😎");
+      print(stackTrace);
+    },
+  );
 }
 
 class MyApp extends StatelessWidget {

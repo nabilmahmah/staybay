@@ -5,7 +5,7 @@ import 'package:staybay/cubits/locale/locale_cubit.dart';
 import 'package:staybay/models/book_model.dart';
 import 'package:staybay/models/city_model.dart';
 import 'package:staybay/models/governorate_model.dart';
-import 'package:staybay/screens/booking_details_screen.dart';
+// import 'package:staybay/screens/booking_details_screen.dart';
 import 'package:staybay/services/pay_booking_service.dart';
 import 'package:staybay/services/rate_booking_service.dart';
 import 'package:staybay/widgets/chat_button.dart';
@@ -74,7 +74,7 @@ class _BookedCardState extends State<BookedCard> {
   @override
   Widget build(BuildContext context) {
     final status = widget.book.status;
-    final bool canEdit = widget.book.canUserEdit;
+    // final bool canEdit = widget.book.canUserEdit;
     final bool canRate = widget.book.userCanRate;
     final bool canPay = widget.book.canUserPay;
     final double ratingVal =
@@ -213,14 +213,14 @@ class _BookedCardState extends State<BookedCard> {
     );
   }
 
-  void _handleEdit() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => BookingDetailsScreen(booking: widget.book),
-      ),
-    ).then((_) => widget.onUpdate?.call());
-  }
+  // void _handleEdit() {
+  //   Navigator.push(
+  //     context,
+  //     MaterialPageRoute(
+  //       builder: (_) => BookingDetailsScreen(booking: widget.book),
+  //     ),
+  //   ).then((_) => widget.onUpdate?.call());
+  // }
 
   void _handleRate() async {
     final selectedRating = await showDialog<int>(

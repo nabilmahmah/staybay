@@ -150,6 +150,14 @@ class _HomePageState extends State<HomePage> {
                           newFilters.remove('price_min');
                           newFilters.remove('price_max');
                         }
+                        if (key == 'size_min' || key == 'size_max') {
+                          newFilters.remove('size_min');
+                          newFilters.remove('size_max');
+                        }
+                        if (key == 'rating_min' || key == 'rating_max') {
+                          newFilters.remove('rating_min');
+                          newFilters.remove('rating_max');
+                        }
 
                         filters = newFilters;
                       });

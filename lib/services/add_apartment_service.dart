@@ -61,7 +61,16 @@ class AddApartmentService {
         ],
       });
 
-      final response = await dio.post('/apartments', data: formData);
+      final response = await dio.post(
+        '/apartments',
+        data: formData,
+        options: Options(
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'multipart/form-data',
+          },
+        ),
+      );
 
       log('Apartment created: ${response.data}');
 

@@ -7,16 +7,18 @@ import 'package:staybay/constants.dart';
 class LoginService {
   static Future<Response?> logIn(context, String phone, String password) async {
     final Dio dio = Dio();
-    dio.options.headers.addAll({
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-    });
     final String login = '/user/login';
 
     dio.options.baseUrl = kBaseUrl;
     try {
       final response = await dio.post(
         login,
+        options: Options(
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+          },
+        ),
         data: {"phone": phone, "password": password},
       );
 

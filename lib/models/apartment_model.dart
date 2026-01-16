@@ -54,13 +54,13 @@ class Apartment {
     }
     List<String> paths = [];
     List<int> ids = [];
-   
+
     String coverPath = '';
     if (json['cover_image'] != null) {
       String p = json['cover_image']['path'] ?? '';
       coverPath = p.startsWith("http") ? p : '$kBaseUrlImage/$p';
     }
- 
+
     if (json['images'] != null && json['images'] is List) {
       for (var img in json['images']) {
         if (img['id'] != null) ids.add(img['id']);

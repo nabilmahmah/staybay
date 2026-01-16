@@ -67,8 +67,8 @@ class _AppBottomNavBarState extends State<AppBottomNavBar> {
             label: locale['home'] ?? 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.add_circle_outline),
-            activeIcon: Icon(Icons.add_circle),
+            icon: Icon(Icons.add_home_outlined),
+            activeIcon: Icon(Icons.add_home),
             label: locale['add'] ?? 'Add',
           ),
           BottomNavigationBarItem(

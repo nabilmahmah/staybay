@@ -201,7 +201,7 @@ class _AccountScreenState extends State<AccountScreen> {
                   children: [
                     _profileTile(
                       context,
-                      icon: Icons.favorite_border,
+                      icon: Icons.home_filled,
                       title: locale['myApartments'] ?? 'My Apartments',
                       onTap: () {
                         Navigator.of(

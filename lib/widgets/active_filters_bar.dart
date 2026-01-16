@@ -81,6 +81,16 @@ class ActiveFiltersBar extends StatelessWidget {
             ? '${locale['price'] ?? 'Price'}: \$${filters['price_min']} - \$${filters['price_max']}'
             : '${locale['price'] ?? 'Price'} ≥ \$${filters['price_min']}';
 
+      case 'size_min':
+        return filters.containsKey('size_max')
+            ? '${locale['size'] ?? 'Area'}: ${filters['size_min']} - ${filters['size_max']} m²'
+            : '${locale['size'] ?? 'Area'} ≥ ${filters['size_min']} m²';
+
+      case 'rating_min':
+        return filters.containsKey('rating_max')
+            ? '${locale['rating'] ?? 'Rating'}: ${filters['rating_min']} - ${filters['rating_max']}'
+            : '${locale['rating'] ?? 'Rating'} ≥ ${filters['rating_min']}';
+
       case 'has_pool':
         return locale['pool'];
 
