@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:staybay/app_theme.dart';
 import 'package:staybay/cubits/locale/locale_cubit.dart';
 import 'package:staybay/cubits/locale/locale_state.dart';
 

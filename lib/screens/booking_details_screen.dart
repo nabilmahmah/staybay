@@ -248,8 +248,11 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
             height: 220,
             width: double.infinity,
             fit: BoxFit.cover,
-            errorBuilder: (_, __, ___) =>
-                Container(height: 220, color: Colors.grey[200]),
+            errorBuilder: (_, __, ___) => Container(
+              height: 220,
+              color: Colors.grey[200],
+              child: CircularProgressIndicator(),
+            ),
           ),
         ),
         const SizedBox(height: 16),

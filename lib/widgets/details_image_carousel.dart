@@ -62,11 +62,7 @@ class _DetailsImageCarouselState extends State<DetailsImageCarousel> {
               errorBuilder: (context, error, stackTrace) => Container(
                 color: Colors.grey[300],
                 alignment: Alignment.center,
-                child: const Icon(
-                  Icons.error_outline,
-                  size: 50,
-                  color: Colors.grey,
-                ),
+                child: const CircularProgressIndicator(),
               ),
             );
           },

@@ -74,9 +74,10 @@ class ApartmentCard extends StatelessWidget {
                       height: 200,
                       color: Colors.grey[300],
                       alignment: Alignment.center,
-                      child: Text(
-                        '${locale['imageNotFound'] ?? 'Image Not Found: '}${apartment.imagePath}',
-                      ),
+                      child: const CircularProgressIndicator(),
+                      // Text(
+                      //   '${locale['imageNotFound'] ?? 'Image Not Found: '}${apartment.imagePath}',
+                      // ),
                     ),
                   ),
                 ),

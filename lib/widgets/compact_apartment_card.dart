@@ -93,11 +93,7 @@ class _CompactApartmentCardState extends State<CompactApartmentCard> {
                         width: 100,
                         color: Colors.grey[300],
                         alignment: Alignment.center,
-                        child: const Icon(
-                          Icons.broken_image,
-                          size: 40,
-                          color: Colors.grey,
-                        ),
+                        child: const CircularProgressIndicator(),
                       ),
                     ),
                   ),

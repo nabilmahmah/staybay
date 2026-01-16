@@ -152,7 +152,7 @@ class _OwnerBookedCardState extends State<OwnerBookedCard> {
                             },
                             errorBuilder: (_, __, ___) => Container(
                               color: Colors.grey.shade200,
-                              child: const Icon(Icons.broken_image),
+                              child: const CircularProgressIndicator(),
                             ),
                           ),
                         ),
