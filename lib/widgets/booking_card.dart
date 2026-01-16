@@ -184,6 +184,12 @@ class _BookedCardState extends State<BookedCard> {
                           buttonText: locale['chat'] ?? 'Chat',
                         ),
                         const SizedBox(height: 8),
+                        TextButton.icon(
+                          onPressed: canEdit ? _handleEdit : null,
+                          icon: const Icon(Icons.edit, size: 18),
+                          label: Text(locale['edit'] ?? 'edit'),
+                        ),
+                        const SizedBox(height: 8),
                         OutlinedButton.icon(
                           onPressed: canRate ? _handleRate : null,
                           icon: const Icon(Icons.star_outline, size: 18),
