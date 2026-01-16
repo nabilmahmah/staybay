@@ -13,7 +13,6 @@ class ActiveFiltersBar extends StatelessWidget {
     required this.filters,
     required this.onRemove,
   });
-
   @override
   Widget build(BuildContext context) {
     if (filters.isEmpty) return const SizedBox.shrink();
@@ -21,18 +20,15 @@ class ActiveFiltersBar extends StatelessWidget {
     return BlocBuilder<LocaleCubit, LocaleState>(
       builder: (context, state) {
         final locale = state.localizedStrings['activeFilters'] ?? {};
-        final processedKeys = <String>{}; // لمنع تكرار الـ Chips للنطاقات
+        final processedKeys = <String>{};
 
         final chips = filters.entries
             .map((entry) {
               final key = entry.key;
               if (processedKeys.contains(key)) return null;
 
-              // معالجة النطاقات (السعر، المساحة، التقييم)
               if (key.contains('_min') || key.contains('_max')) {
-                final baseKey = key.split(
-                  '_',
-                )[0]; // ستكون 'price' أو 'size' أو 'rating'
+                final baseKey = key.split('_')[0];
                 processedKeys.add('${baseKey}_min');
                 processedKeys.add('${baseKey}_max');
 
@@ -40,7 +36,6 @@ class ActiveFiltersBar extends StatelessWidget {
                 return _buildChip(context, label, baseKey);
               }
 
-              // معالجة الفلاتر العادية
               processedKeys.add(key);
               final label = _labelFor(locale, key, entry.value);
               if (label == null) return null;
@@ -60,7 +55,6 @@ class ActiveFiltersBar extends StatelessWidget {
     );
   }
 
-  // دالة بناء الـ Chip الموحدة
   Widget _buildChip(BuildContext context, String label, String key) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 4),
@@ -72,7 +66,6 @@ class ActiveFiltersBar extends StatelessWidget {
     );
   }
 
-  // دالة مخصصة للنطاقات
   String _labelForRange(
     Map<String, dynamic> locale,
     String base,
@@ -87,7 +80,6 @@ class ActiveFiltersBar extends StatelessWidget {
     return '$name ≤ $max';
   }
 
-  // دالة للفلاتر العادية
   String? _labelFor(Map<String, dynamic> locale, String key, dynamic value) {
     switch (key) {
       case 'city_name':
