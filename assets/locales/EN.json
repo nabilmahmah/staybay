@@ -313,7 +313,8 @@
     "status": "Status: ",
     "pay": "Pay Now",
     "chat":"Chat",
-    "rate":"Rate"
+    "rate": "Rate",
+    "edit": "Edit"
   },
   "bottomNav": {
     "home": "Home",
