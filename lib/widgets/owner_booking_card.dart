@@ -65,7 +65,7 @@ class _OwnerBookedCardState extends State<OwnerBookedCard> {
     Map<String, dynamic> locale,
   ) async {
     final bool isApprove = newStatus == 'approved';
-    String localeStatus = locale['status_question'][newStatus];
+    String localeStatus = locale['status_question'][newStatus] ?? newStatus;
 
     final bool? confirm = await showDialog<bool>(
       context: context,
