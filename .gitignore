@@ -49,3 +49,4 @@ windows/flutter/generated_plugins.cmake
 
 #new gitgnore
 lib/constants.dart
+.vscode/launch.json
