@@ -299,9 +299,7 @@
          "status_all": {
             "pending": "قيد الانتظار",
             "approved": "مقبول",
-            "approved1": "قبول",
             "rejected": "مرفوض",
-            "rejected1": "رفض",
             "cancelled": "ملغي",
             "completed": "مكتمل",
             "started": "بدأ",
@@ -405,9 +403,19 @@
         "status": {
             "pending": "قيد الانتظار",
             "approved": "مقبول",
-            "approved1": "قبول",
             "rejected": "مرفوض",
-            "rejected1": "رفض",
+            "cancelled": "ملغي",
+            "completed": "مكتمل",
+            "started": "بدأ",
+            "finished": "انتهى",
+            "failed": "فشل",
+            "error": "خطأ",
+            "booking": "الحجز"
+        },
+        "status_question": {
+            "pending": "قيد الانتظار",
+            "approved": "قبول",
+            "rejected": "رفض",
             "cancelled": "ملغي",
             "completed": "مكتمل",
             "started": "بدأ",

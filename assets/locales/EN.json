@@ -300,10 +300,8 @@
   "bookedCard": {
      "status_all":{
       "pending":"pending",
-      "approved":"approved",
-      "approved1": "approve",
-      "rejected":"rejected",
-      "rejected1": "reject",
+      "approved": "approved",
+      "rejected": "rejected",
       "cancelled":"cancelled",
       "completed":"completed",
       "started":"started",
@@ -406,15 +404,25 @@
   "OwnerBookedCard":{
     "status":{
       "pending":"pending",
-      "approved":"approved",
-      "approved1": "approve",
-      "rejected":"rejected",
-      "rejected1": "reject",
+      "approved": "approved",
+      "rejected": "rejected",
       "cancelled":"cancelled",
       "completed":"completed",
       "started":"started",
       "finished":"finished",
       "failed":"failed",
+      "error": "Error",
+      "booking": "Booking"
+    },
+    "status_question": {
+      "pending": "pending",
+      "approved": "approve",
+      "rejected": "reject",
+      "cancelled": "cancelled",
+      "completed": "completed",
+      "started": "started",
+      "finished": "finished",
+      "failed": "failed",
       "error": "Error",
       "booking": "Booking"
     },
