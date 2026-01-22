@@ -36,178 +36,202 @@ class _CompactApartmentCardState extends State<CompactApartmentCard> {
   }
 
   @override
-  Widget build(BuildContext context) {
+Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
     return BlocBuilder<LocaleCubit, LocaleState>(
       builder: (context, state) {
         Map<String, dynamic> locale =
             state.localizedStrings['CompactApartmentCard'];
-        return InkWell(
-          onTap: () {
-            if (widget.edit) {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) =>
-                      // AddApartmentScreen(apartmentToEdit: widget.apartment),
-                      EditApartmentScreen(apartment: widget.apartment),
-                ),
-              );
-            } else {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) =>
-                      ApartmentDetailsScreen(apartment: widget.apartment),
-                ),
-              );
-            }
-          },
-          borderRadius: BorderRadius.circular(AppSizes.borderRadiusLarge),
-          child: Card(
-            color: theme.cardColor,
-            elevation: 1,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(AppSizes.borderRadiusLarge),
-              side: BorderSide(
-                color: theme.colorScheme.primary.withValues(alpha: 0.6),
-                width: 1.5,
-              ),
-            ),
-            margin: const EdgeInsets.only(bottom: AppSizes.paddingMedium),
-            child: Padding(
-              padding: const EdgeInsets.all(AppSizes.paddingSmall),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(
-                      AppSizes.borderRadiusSmall,
-                    ),
-                    child: Image.network(
-                      widget.apartment.imagePath,
-                      fit: BoxFit.cover,
-                      height: 100,
-                      width: 100,
-                      errorBuilder: (context, error, stackTrace) => Container(
-                        height: 100,
-                        width: 100,
-                        color: Colors.grey[300],
-                        alignment: Alignment.center,
-                        child: const CircularProgressIndicator(),
-                      ),
-                    ),
-                  ),
 
-                  const SizedBox(width: AppSizes.paddingMedium),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          widget.apartment.title,
-                          style: theme.textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: theme.colorScheme.onSurface,
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
+        return LayoutBuilder(
+          builder: (context, constraints) {
+            final double width = constraints.maxWidth;
+
+            // Breakpoints
+            final bool isSmall = width < 360;
+            final bool isTablet = width >= 600;
+
+            final double imageSize = isTablet
+                ? 130
+                : isSmall
+                ? 80
+                : 100;
+
+            final double titleSize = isTablet ? 18 : 15;
+            final double priceSize = isTablet ? 22 : 18;
+
+            return InkWell(
+              onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                    builder: (context) => widget.edit
+                        ? EditApartmentScreen(apartment: widget.apartment)
+                        : ApartmentDetailsScreen(apartment: widget.apartment),
+                ),
+                );
+              },
+              borderRadius: BorderRadius.circular(AppSizes.borderRadiusLarge),
+              child: Card(
+                elevation: 1,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(
+                    AppSizes.borderRadiusLarge,
+                  ),
+                  side: BorderSide(
+                    color: theme.colorScheme.primary.withValues(alpha: 0.6),
+                    width: 1.5,
+                  ),
+                ),
+                margin: const EdgeInsets.only(bottom: AppSizes.paddingMedium),
+                child: Padding(
+                  padding: const EdgeInsets.all(AppSizes.paddingSmall),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      /// IMAGE
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(
+                          AppSizes.borderRadiusSmall,
                         ),
-                        const SizedBox(height: AppSizes.paddingSmall / 2),
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.location_on,
-                              size: 16,
-                              color: theme.colorScheme.onSurfaceVariant,
-                            ),
-                            const SizedBox(width: AppSizes.paddingSmall / 2),
-                            Text(
-                              '${widget.apartment.governorate?.localized(context)},${widget.apartment.city?.localized(context)}',
-                              style: theme.textTheme.bodyMedium?.copyWith(
-                                color: theme.colorScheme.onSurfaceVariant,
+                        child: Image.network(
+                          widget.apartment.imagePath,
+                          fit: BoxFit.cover,
+                          height: imageSize,
+                          width: imageSize,
+                          errorBuilder: (context, error, stackTrace) =>
+                              Container(
+                                height: imageSize,
+                                width: imageSize,
+                                color: Colors.grey[300],
+                                alignment: Alignment.center,
+                                child: const CircularProgressIndicator(),
                               ),
+                        ),
+                      ),
+
+                      const SizedBox(width: AppSizes.paddingMedium),
+
+                      /// CONTENT
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              widget.apartment.title,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: AppSizes.paddingSmall),
-                        Row(
-                          children: [
-                            const Icon(
-                              Icons.star,
-                              size: 18,
-                              color: Colors.amber,
-                            ),
-                            const SizedBox(width: AppSizes.paddingSmall / 2),
-                            Text(
-                              '${widget.apartment.rating} (${widget.apartment.ratingCount})',
-                              style: theme.textTheme.bodyMedium?.copyWith(
+                              style: theme.textTheme.titleMedium?.copyWith(
                                 fontWeight: FontWeight.bold,
-                                color: theme.colorScheme.onSurface,
+                                fontSize: titleSize,
                               ),
                             ),
-                          ],
-                        ),
-                        const SizedBox(height: AppSizes.paddingSmall),
 
-                        Text.rich(
-                          TextSpan(
-                            children: [
-                              TextSpan(
-                                text:
-                                    '\$${widget.apartment.pricePerNight.toStringAsFixed(0)}',
-                                style: theme.textTheme.titleLarge?.copyWith(
-                                  fontWeight: FontWeight.w900,
-                                  color: theme.colorScheme.primary,
-                                  fontSize: 20,
-                                ),
-                              ),
-                              TextSpan(
-                                text: locale['perNight'] ?? ' / night',
-                                style: theme.textTheme.bodySmall?.copyWith(
+                            const SizedBox(height: 4),
+
+                            Row(
+                              children: [
+                                Icon(
+                                  Icons.location_on,
+                                  size: 14,
                                   color: theme.colorScheme.onSurfaceVariant,
                                 ),
+                                const SizedBox(width: 4),
+                                Expanded(
+                                  child: Text(
+                                    '${widget.apartment.governorate?.localized(context)}, ${widget.apartment.city?.localized(context)}',
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: theme.textTheme.bodySmall?.copyWith(
+                                      color: theme.colorScheme.onSurfaceVariant,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+
+                            const SizedBox(height: 6),
+
+                            Row(
+                              children: [
+                                const Icon(
+                                  Icons.star,
+                                  size: 16,
+                                  color: Colors.amber,
+                                ),
+                                const SizedBox(width: 4),
+                                Text(
+                                  '${widget.apartment.rating} (${widget.apartment.ratingCount})',
+                                  style: theme.textTheme.bodySmall?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+
+                            const SizedBox(height: 8),
+
+                            Text.rich(
+                              TextSpan(
+                                children: [
+                                  TextSpan(
+                                    text:
+                                        '\$${widget.apartment.pricePerNight.toStringAsFixed(0)}',
+                                    style: theme.textTheme.titleLarge?.copyWith(
+                                      fontWeight: FontWeight.w900,
+                                      fontSize: priceSize,
+                                      color: theme.colorScheme.primary,
+                                    ),
+                                  ),
+                                  TextSpan(
+                                    text: locale['perNight'] ?? ' / night',
+                                    style: theme.textTheme.bodySmall?.copyWith(
+                                      color: theme.colorScheme.onSurfaceVariant,
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    alignment: Alignment.topRight,
-                    padding: const EdgeInsets.only(left: AppSizes.paddingSmall),
-                    child: IconButton(
+                      ),
+
+                      /// FAVORITE
+                      IconButton(
                       icon: Icon(
-                        _isFavorite ? Icons.favorite : Icons.favorite_border,
-                        color: _isFavorite ? Colors.red : Colors.white,
+                          _isFavorite ? Icons.favorite : Icons.favorite_border,
+                          color: _isFavorite
+                              ? Colors.red
+                              : theme.colorScheme.onSurfaceVariant,
                       ),
                       onPressed: () {
                         setState(() {
                           _isFavorite = !_isFavorite;
-                          widget.apartment.isFavorite = _isFavorite;
+                            widget.apartment.isFavorite = _isFavorite;
+
                           if (_isFavorite) {
                             AddFavoriteService.addFavorite(
                               context,
-                              int.parse(widget.apartment.id!),
+                                int.parse(widget.apartment.id!),
                             );
                           } else {
-                            RemoveFavoriteService.removeFavorite(
+                              RemoveFavoriteService.removeFavorite(
                               context,
-                              int.parse(widget.apartment.id!),
+                                int.parse(widget.apartment.id!),
                             );
                           }
                         });
                       },
-                    ),
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
-            ),
-          ),
+            );
+          },
         );
       },
     );
-  }
+}
+
 }
